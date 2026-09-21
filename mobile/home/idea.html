@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디어 - ChoSungmin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <style>
+        body { background-color: #111; color: #eee; min-height: 100vh; }
+
+        .header { background-color: #1a1a1a; box-shadow: 0 0 6px #000; }
+        .header_title { color: #fff; cursor: pointer; }
+        .header_hambuger, .header_search { color: #fff; }
+        .header_text_input { background-color: #2a2a2a; border-color: #444; color: #eee; }
+        .header_text_input::placeholder { color: #888; }
+        .header_input_button { background-color: #e67e22; border-color: #e67e22; color: #fff; font-weight: bold; cursor: pointer; }
+        .header_input_button:hover { background-color: #cf6d17; }
+
+        .nav_wrapper { background-color: #1a1a1a; border-right: 1px solid #2a2a2a; }
+        .nav_wrapper li:hover { background-color: #252525; }
+        .nav_icon, .nav_menu { color: #ccc; }
+        .nav_menu:hover { color: #e67e22; }
+        .nav_menu.active { color: #e67e22; font-weight: bold; }
+        nav { transition: transform 0.3s ease; }
+        nav.nav_hidden { transform: translateX(-100%); }
+
+        .idea_section { margin: 76px 32px 40px 232px; }
+        .idea_section h1 { color: #fff; font-size: 1.4rem; margin-bottom: 24px; }
+
+        .idea_card { background-color: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 10px; padding: 18px 20px; height: 100%; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .idea_card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+        .idea_card_icon { font-size: 1.4rem; margin-bottom: 8px; }
+        .idea_card h2 { font-size: 1rem; font-weight: bold; color: #fff; margin-bottom: 6px; }
+        .idea_card p { font-size: 0.85rem; color: #999; line-height: 1.6; margin-bottom: 0; }
+
+        @media screen and (max-width: 800px) {
+            .idea_section { margin-left: 88px; }
+        }
+        @media screen and (max-width: 400px) {
+            .idea_section { margin-left: 16px; margin-right: 16px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header_wrap">
+            <h1 class="header_start">
+                <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
+                <span class="header_title" onclick="location.href='index.html'">ChoSungmin</span>
+            </h1>
+            <div class="header_center">
+                <form class="header_form" onsubmit="return false">
+                    <input class="header_text_input" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="submit">검색</button>
+                </form>
+            </div>
+            <div class="header_end">
+                <button class="header_search" aria-label="검색">&#128269;</button>
+                <div class="header_profile"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav">
+        <ul class="nav_wrapper">
+            <li>
+                <button class="nav_icon">🍽️</button>
+                <button class="nav_menu" onclick="location.href='index.html'">홈</button>
+            </li>
+            <li>
+                <button class="nav_icon">🎠</button>
+                <button class="nav_menu" onclick="location.href='csm_review.html'">CSM 리뷰</button>
+            </li>
+            <li>
+                <button class="nav_icon">🖼️</button>
+                <button class="nav_menu" onclick="location.href='gallery.html'">갤러리</button>
+            </li>
+            <li>
+                <button class="nav_icon">💡</button>
+                <button class="nav_menu active" onclick="location.href='idea.html'">아이디어</button>
+            </li>
+            <li>
+                <button class="nav_icon">👤</button>
+                <button class="nav_menu" onclick="location.href='profile.html'">자기소개</button>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="idea_section">
+        <h1>💡 다음 업데이트 아이디어</h1>
+        <div class="row g-3">
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="idea_card">
+                    <div class="idea_card_icon">🗺️</div>
+                    <h2>지도 연동</h2>
+                    <p>리뷰한 맛집을 지도 위에 표시해서 위치를 한눈에 볼 수 있게 하기.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="idea_card">
+                    <div class="idea_card_icon">⭐</div>
+                    <h2>즐겨찾기</h2>
+                    <p>마음에 드는 맛집을 즐겨찾기에 저장하고 따로 모아보는 기능.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="idea_card">
+                    <div class="idea_card_icon">🏷️</div>
+                    <h2>태그/카테고리</h2>
+                    <p>한식, 양식, 디저트 등 음식 종류별로 리뷰를 분류하는 기능.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="idea_card">
+                    <div class="idea_card_icon">💬</div>
+                    <h2>댓글 기능</h2>
+                    <p>다른 사람들이 리뷰에 댓글을 남길 수 있는 기능.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="idea_card">
+                    <div class="idea_card_icon">📊</div>
+                    <h2>방문 통계</h2>
+                    <p>월별로 방문한 맛집 수, 평균 별점 등을 그래프로 보여주는 기능.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="idea_card">
+                    <div class="idea_card_icon">🌗</div>
+                    <h2>라이트 모드</h2>
+                    <p>현재 다크 테마에 더해 밝은 테마도 선택할 수 있게 하기.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleNav() {
+            document.getElementById('sideNav').classList.toggle('nav_hidden');
+        }
+    </script>
+
+</body>
+</html>
