@@ -1,0 +1,319 @@
+/* =========================================================
+   포트폴리오 모바일 웹 - 공통 스타일
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+  background: linear-gradient(180deg, #eaf3ee 0%, #dfe9e4 100%);
+  color: #22303a;
+  line-height: 1.6;
+}
+
+/* ---------- 전체를 감싸는 컨테이너 ----------
+   모바일 기준으로 만들었지만, 데스크탑에서는 화면 전체 폭을 쓰는
+   진짜 웹사이트 형태로 넓어지도록 max-width만 단계적으로 키운다. */
+.wrap {
+  width: 100%;
+  max-width: 480px;      /* 기본(모바일) 최대 너비 */
+  margin: 0 auto;
+  background: #fff;
+  min-height: 100vh;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- 헤더(타이틀 바) ---------- */
+header {
+  background: linear-gradient(135deg, #1b2b34 0%, #274a3c 100%);
+  color: #fff;
+  padding: 22px 16px;
+  text-align: center;
+  position: relative;
+}
+
+header h1 {
+  font-size: 1.35rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+header::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 3px;
+  background: #4fc987;
+  margin: 10px auto 0;
+  border-radius: 3px;
+}
+
+/* ---------- 내비게이션 메뉴 ---------- */
+nav {
+  background-color: #223b32;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nav ul li {
+  flex: 1;
+}
+
+nav a {
+  display: block;
+  text-align: center;
+  padding: 13px 4px;
+  color: #cfe3d8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:last-child {
+  border-right: none;
+}
+
+nav a:hover {
+  background-color: #2f5346;
+  color: #fff;
+}
+
+nav a.active {
+  background-color: #3fae6a;
+  color: #fff;
+  box-shadow: inset 0 -3px 0 #2c7d4c;
+}
+
+/* ---------- 본문 콘텐츠 ---------- */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;   /* 화면이 아무리 넓어져도 글줄이 너무 길어지지 않도록 제한 */
+  margin: 0 auto;
+  padding: 22px 16px;
+}
+
+main h2 {
+  font-size: 1.15rem;
+  color: #1b2b34;
+  margin-bottom: 12px;
+  border-left: 4px solid #3fae6a;
+  padding-left: 10px;
+}
+
+section {
+  margin-bottom: 26px;
+  background: #fbfdfc;
+  border: 1px solid #e6ece9;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+section ul {
+  padding-left: 18px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+section ul li {
+  margin-bottom: 4px;
+}
+
+/* 자기소개 프로필 영역 */
+.profile {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.profile .photo {
+  width: 90px;
+  height: 110px;
+  background-color: #cfd8d6;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;
+}
+
+.profile .desc {
+  font-size: 0.88rem;
+  color: #333;
+}
+
+/* 그림 화면 이미지 */
+.content-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 표 화면 표 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  border: 2px solid #2c4d40;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+table th,
+table td {
+  border: 1px solid #9fc3ae;
+  padding: 9px 8px;
+  text-align: center;
+}
+
+table th {
+  background-color: #2c4d40;
+  color: #fff;
+  font-weight: 600;
+}
+
+table tr:nth-child(even) td {
+  background-color: #f1f7f3;
+}
+
+table tr:hover td {
+  background-color: #e2f0e8;
+}
+
+/* 바로가기 (이미지 링크) - 기본: 모바일, 좌측 하단에 가로 배치 */
+.shortcuts-bar {
+  position: fixed;
+  left: 16px;
+  bottom: 58px; /* 하단 footer와 겹치지 않도록 여유를 둠 */
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  z-index: 100;
+}
+
+.shortcuts-bar a {
+  display: block;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 16px;
+}
+
+.shortcuts-bar a img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+.shortcuts-bar a:hover {
+  transform: translateY(-3px);
+}
+
+.shortcuts-bar a:hover img {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.32);
+}
+
+/* ---------- 푸터 ---------- */
+footer {
+  background-color: #1b2b34;
+  color: #9fb1ac;
+  text-align: center;
+  font-size: 0.75rem;
+  padding: 12px;
+}
+
+/* =========================================================
+   반응형 미디어쿼리
+   기본(작성 기준)은 모바일이지만, 화면이 넓어질수록
+   .wrap의 최대 너비를 단계적으로 키워서 데스크탑에서는
+   실제 웹사이트처럼 화면을 넓게 쓰도록 만든다.
+
+   1) 500px 이하  : 모바일  - 메뉴 세로 배치, 좁은 1단 레이아웃
+   2) 720px 이하  : 태블릿 - 메뉴 가로 배치, 중간 너비
+   3) 721px 이상  : 데스크탑 - 메뉴 가로 배치, 화면 폭에 맞춰 넓게 표시
+   ========================================================= */
+
+/* 500px 이하: 완전한 모바일 화면 */
+@media (max-width: 500px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  nav a {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .profile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* 720px 이하: 중간 크기(태블릿) 화면 - 메뉴는 가로로, 폭은 조금 더 넓게 */
+@media (min-width: 501px) and (max-width: 720px) {
+  .wrap {
+    max-width: 640px;
+  }
+}
+
+/* 721px 이상: 데스크탑 화면 - 카드가 아니라 화면 전체 폭을 쓰는 웹사이트 형태 */
+@media (min-width: 721px) {
+  .wrap {
+    max-width: 1100px;
+    box-shadow: none;
+  }
+
+  header {
+    padding: 28px 40px;
+  }
+
+  nav a {
+    padding: 16px 4px;
+    font-size: 1rem;
+  }
+
+  main {
+    padding: 36px 40px;
+  }
+
+  footer {
+    padding: 16px;
+  }
+
+  /* 바로가기: 데스크탑에서는 화면 우측에 세로로 배치 */
+  .shortcuts-bar {
+    left: auto;
+    bottom: auto;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+  }
+}
+
+/* 1101px 이상: 초대형 화면에서는 좌우 배경이 과하게 남지 않도록 살짝 더 확장 */
+@media (min-width: 1400px) {
+  .wrap {
+    max-width: 1280px;
+  }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>반응형 미디어쿼리 예제</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-family: sans-serif;
+    transition: background-color 0.3s ease;
+  }
+
+  /* 기본값: 721px 이상일 때 보라색 */
+  body {
+    background-color: purple;
+    color: white;
+  }
+
+  /* 720px 이하일 때 노란색 */
+  @media (max-width: 720px) {
+    body {
+      background-color: yellow;
+      color: black;
+    }
+  }
+
+  /* 500px 이하일 때 연두색 (더 좁은 조건이 나중에 와서 우선 적용됨) */
+  @media (max-width: 500px) {
+    body {
+      background-color: yellowgreen;
+      color: black;
+    }
+  }
+</style>
+</head>
+<body>
+  화면 너비를 조절해보세요!
+</body>
+</html>
