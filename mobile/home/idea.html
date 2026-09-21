@@ -33,19 +33,31 @@
         nav.nav_hidden { transform: translateX(-100%); }
 
         .idea_section { margin: 76px 32px 40px 232px; }
-        .idea_section h1 { color: #fff; font-size: 1.4rem; margin-bottom: 24px; }
+        .idea_section h1 { color: #fff; font-size: 1.4rem; margin-bottom: 20px; }
 
-        .idea_card { background-color: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 10px; padding: 18px 20px; height: 100%; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .idea_form { display: flex; gap: 10px; margin-bottom: 24px; }
+        .idea_input { flex: 1; background-color: #2a2a2a; border: 1px solid #444; color: #eee; border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; }
+        .idea_input::placeholder { color: #888; }
+        .idea_input:focus { outline: none; border-color: #e67e22; }
+        .idea_add_btn { background-color: #e67e22; border: none; border-radius: 8px; color: #fff; font-weight: bold; padding: 0 20px; cursor: pointer; }
+        .idea_add_btn:hover { background-color: #cf6d17; }
+
+        .idea_card { background-color: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 18px; height: 100%; position: relative; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .idea_card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
-        .idea_card_icon { font-size: 1.4rem; margin-bottom: 8px; }
-        .idea_card h2 { font-size: 1rem; font-weight: bold; color: #fff; margin-bottom: 6px; }
-        .idea_card p { font-size: 0.85rem; color: #999; line-height: 1.6; margin-bottom: 0; }
+        .idea_card_icon { font-size: 1.3rem; margin-bottom: 8px; }
+        .idea_card p { font-size: 0.9rem; color: #ddd; line-height: 1.6; margin-bottom: 0; padding-right: 20px; white-space: pre-wrap; word-break: break-word; }
+        .idea_delete_btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #666; font-size: 1rem; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+        .idea_delete_btn:hover { color: #e74c3c; background-color: rgba(231,76,60,0.1); }
+
+        .idea_empty { color: #666; font-size: 0.9rem; padding: 24px 0; text-align: center; display: none; }
+        .idea_empty.show { display: block; }
 
         @media screen and (max-width: 800px) {
             .idea_section { margin-left: 88px; }
         }
         @media screen and (max-width: 400px) {
             .idea_section { margin-left: 16px; margin-right: 16px; }
+            .idea_form { flex-direction: column; }
         }
     </style>
 </head>
@@ -97,57 +109,99 @@
     </nav>
 
     <div class="idea_section">
-        <h1>💡 다음 업데이트 아이디어</h1>
-        <div class="row g-3">
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="idea_card">
-                    <div class="idea_card_icon">🗺️</div>
-                    <h2>지도 연동</h2>
-                    <p>리뷰한 맛집을 지도 위에 표시해서 위치를 한눈에 볼 수 있게 하기.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="idea_card">
-                    <div class="idea_card_icon">⭐</div>
-                    <h2>즐겨찾기</h2>
-                    <p>마음에 드는 맛집을 즐겨찾기에 저장하고 따로 모아보는 기능.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="idea_card">
-                    <div class="idea_card_icon">🏷️</div>
-                    <h2>태그/카테고리</h2>
-                    <p>한식, 양식, 디저트 등 음식 종류별로 리뷰를 분류하는 기능.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="idea_card">
-                    <div class="idea_card_icon">💬</div>
-                    <h2>댓글 기능</h2>
-                    <p>다른 사람들이 리뷰에 댓글을 남길 수 있는 기능.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="idea_card">
-                    <div class="idea_card_icon">📊</div>
-                    <h2>방문 통계</h2>
-                    <p>월별로 방문한 맛집 수, 평균 별점 등을 그래프로 보여주는 기능.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="idea_card">
-                    <div class="idea_card_icon">🌗</div>
-                    <h2>라이트 모드</h2>
-                    <p>현재 다크 테마에 더해 밝은 테마도 선택할 수 있게 하기.</p>
-                </div>
-            </div>
-        </div>
+        <h1>💡 생각난 아이디어</h1>
+
+        <form class="idea_form" onsubmit="return false">
+            <input class="idea_input" id="ideaInput" placeholder="생각난 아이디어를 적어보세요"
+                maxlength="200" onkeydown="if(event.key==='Enter'){addIdea();}">
+            <button class="idea_add_btn" type="button" onclick="addIdea()">추가</button>
+        </form>
+
+        <div class="row g-3" id="ideaGrid"></div>
+        <p class="idea_empty" id="ideaEmpty">아직 등록된 아이디어가 없어요. 위 입력창에 적어보세요!</p>
     </div>
 
     <script>
         function toggleNav() {
             document.getElementById('sideNav').classList.toggle('nav_hidden');
         }
+
+        const IDEA_STORAGE_KEY = 'csm_ideas';
+        const DEFAULT_IDEAS = [
+            '🗺️ 리뷰한 맛집을 지도 위에 표시해서 위치를 한눈에 볼 수 있게 하기',
+            '⭐ 마음에 드는 맛집을 즐겨찾기에 저장하고 따로 모아보는 기능',
+            '🏷️ 한식, 양식, 디저트 등 음식 종류별로 리뷰를 분류하는 기능',
+            '💬 다른 사람들이 리뷰에 댓글을 남길 수 있는 기능',
+            '📊 월별로 방문한 맛집 수, 평균 별점 등을 그래프로 보여주는 기능',
+            '🌗 현재 다크 테마에 더해 밝은 테마도 선택할 수 있게 하기'
+        ];
+
+        function loadIdeas() {
+            try {
+                const raw = localStorage.getItem(IDEA_STORAGE_KEY);
+                if (raw === null) {
+                    const seeded = DEFAULT_IDEAS.map(text => ({ id: Date.now() + Math.random(), text }));
+                    localStorage.setItem(IDEA_STORAGE_KEY, JSON.stringify(seeded));
+                    return seeded;
+                }
+                return JSON.parse(raw);
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveIdeas(ideas) {
+            try {
+                localStorage.setItem(IDEA_STORAGE_KEY, JSON.stringify(ideas));
+            } catch (e) { /* storage unavailable */ }
+        }
+
+        function renderIdeas() {
+            const ideas = loadIdeas();
+            const grid = document.getElementById('ideaGrid');
+            const empty = document.getElementById('ideaEmpty');
+            grid.innerHTML = '';
+
+            if (ideas.length === 0) {
+                empty.classList.add('show');
+                return;
+            }
+            empty.classList.remove('show');
+
+            ideas.forEach(idea => {
+                const col = document.createElement('div');
+                col.className = 'col-lg-4 col-md-6 col-12';
+                col.innerHTML = `
+                    <div class="idea_card">
+                        <button class="idea_delete_btn" aria-label="삭제" onclick="deleteIdea(${idea.id})">✕</button>
+                        <div class="idea_card_icon">💡</div>
+                        <p></p>
+                    </div>`;
+                col.querySelector('p').textContent = idea.text;
+                grid.appendChild(col);
+            });
+        }
+
+        function addIdea() {
+            const input = document.getElementById('ideaInput');
+            const text = input.value.trim();
+            if (text === '') return;
+
+            const ideas = loadIdeas();
+            ideas.unshift({ id: Date.now() + Math.random(), text });
+            saveIdeas(ideas);
+
+            input.value = '';
+            renderIdeas();
+        }
+
+        function deleteIdea(id) {
+            const ideas = loadIdeas().filter(idea => idea.id !== id);
+            saveIdeas(ideas);
+            renderIdeas();
+        }
+
+        renderIdeas();
     </script>
 
 </body>
