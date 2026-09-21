@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChoSungmin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/thumbs.css">
+    <style>
+        body { background-color: #111; color: #eee; min-height: 100vh; }
+
+        .header { background-color: #1a1a1a; box-shadow: 0 0 6px #000; }
+        .header_title { color: #fff; cursor: pointer; }
+        .header_hambuger, .header_search { color: #fff; }
+        .header_text_input { background-color: #2a2a2a; border-color: #444; color: #eee; }
+        .header_text_input::placeholder { color: #888; }
+        .header_input_button { background-color: #e67e22; border-color: #e67e22; color: #fff; font-weight: bold; cursor: pointer; }
+        .header_input_button:hover { background-color: #cf6d17; }
+
+        .nav_wrapper { background-color: #1a1a1a; border-right: 1px solid #2a2a2a; }
+        .nav_wrapper li:hover { background-color: #252525; }
+        .nav_icon, .nav_menu { color: #ccc; }
+        .nav_menu:hover { color: #e67e22; }
+        .nav_menu.active { color: #e67e22; font-weight: bold; }
+        nav { transition: transform 0.3s ease; }
+        nav.nav_hidden { transform: translateX(-100%); }
+
+        .hero { margin: 60px 0 0 200px; padding: 40px 32px 32px; display: flex; align-items: center; gap: 28px; border-bottom: 1px solid #222; }
+        .hero_avatar { width: 72px; height: 72px; border-radius: 50%; background-color: #e67e22; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .hero_badge { display: inline-block; background-color: #e67e22; color: #fff; font-size: 0.72rem; padding: 2px 10px; border-radius: 20px; margin-bottom: 8px; }
+        .hero_text h2 { font-size: 1.5rem; font-weight: bold; color: #fff; margin-bottom: 6px; }
+        .hero_text p { font-size: 0.9rem; color: #999; line-height: 1.7; }
+
+        .section_title { margin: 0 0 0 200px; padding: 28px 32px 0; font-size: 0.85rem; color: #666; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .thumbs_wrapper { margin: 0 0 40px 200px; padding: 16px 24px; }
+
+        .food_card { background-color: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; height: 100%; }
+        .food_card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+        .food_card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        .food_card_body { padding: 14px 16px; }
+        .food_card_rating { color: #e67e22; font-size: 0.85rem; margin-bottom: 6px; }
+        .food_card_body h2 { font-size: 1rem; font-weight: bold; color: #fff; margin-bottom: 6px; }
+        .food_card_meta { display: flex; gap: 12px; font-size: 0.78rem; color: #555; }
+
+
+        .card_actions { display:flex; gap:8px; margin-top:8px; }
+        .card_like_btn, .card_cmt_btn {
+            background:none; border:1px solid #333; border-radius:20px;
+            color:#aaa; font-size:0.78rem; padding:3px 10px; cursor:pointer; transition:all 0.2s;
+        }
+        .card_like_btn:hover { border-color:#e74c3c; color:#e74c3c; }
+        .card_like_btn.liked { border-color:#e74c3c; color:#e74c3c; background:#2a1a1a; }
+        .card_cmt_btn:hover { border-color:#e67e22; color:#e67e22; }
+        .card_cmt_box {
+            display:none; border-top:1px solid #2a2a2a;
+            background:#161616; padding:10px 12px;
+        }
+        .card_cmt_box.open { display:block; }
+        .card_cmt_list { max-height:120px; overflow-y:auto; margin-bottom:8px; font-size:0.8rem; }
+        .cmt_item { padding:4px 0; border-bottom:1px solid #222; }
+        .cmt_item:last-child { border-bottom:none; }
+        .cmt_author { color:#e67e22; font-weight:bold; margin-right:5px; }
+        .cmt_text { color:#ccc; }
+        .cmt_time { color:#555; font-size:0.7rem; margin-left:5px; }
+        .cmt_empty { color:#555; font-size:0.78rem; text-align:center; padding:4px 0; }
+        .card_cmt_input_row { display:flex; gap:6px; }
+        .card_cmt_input {
+            flex:1; height:32px; background:#2a2a2a; border:1px solid #333;
+            border-radius:6px; color:#eee; padding:0 8px; font-size:0.8rem;
+        }
+        .card_cmt_input:focus { outline:none; border-color:#e67e22; }
+        .card_cmt_submit {
+            height:32px; padding:0 10px; background:#e67e22; border:none;
+            border-radius:6px; color:#fff; font-size:0.78rem; cursor:pointer; white-space:nowrap; flex-shrink:0;
+        }
+        .card_no_login { color:#555; font-size:0.78rem; text-align:center; padding:4px 0; }
+        /* 검색으로 숨긴 카드 */
+        .card_col.hidden { display: none; }
+
+        /* 검색 결과 없음 */
+        .no_result { display: none; text-align: center; padding: 48px 0; color: #555; font-size: 1rem; }
+        .no_result.show { display: block; }
+
+        @media screen and (max-width: 800px) {
+            .hero, .section_title, .thumbs_wrapper { margin-left: 56px; }
+        }
+        @media screen and (max-width: 400px) {
+            .hero, .section_title, .thumbs_wrapper { margin-left: 0; }
+            .hero { flex-direction: column; text-align: center; }
+        }
+    
+        /* 로그인 버튼 */
+        .header_login_btn {
+            height: 32px;
+            padding: 0 14px;
+            margin-right: 8px;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .header_login_btn:hover { background-color: #cf6d17; }
+        .header_login_btn.logged { background-color: #2a2a2a; border: 1px solid #444; color: #aaa; }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header_wrap">
+            <h1 class="header_start">
+                <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
+                <span class="header_title" onclick="location.href='exam01.html'">ChoSungmin</span>
+            </h1>
+            <div class="header_center">
+                <form class="header_form" onsubmit="return false">
+                    <input class="header_text_input" id="searchInput"
+                        placeholder="음식 이름으로 검색"
+                        oninput="searchCards()">
+                    <button class="header_input_button" type="button" onclick="searchCards()">검색</button>
+                </form>
+            </div>
+            <div class="header_end">
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn">로그인</button>
+                <button class="header_search" aria-label="검색"
+                    onclick="document.getElementById('searchInput').focus()">&#128269;</button>
+                <div class="header_profile"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav">
+        <ul class="nav_wrapper">
+            <li>
+                <button class="nav_icon">🍽️</button>
+                <button class="nav_menu active" onclick="location.href='exam01.html'">홈</button>
+            </li>
+            <li>
+                <button class="nav_icon">🎠</button>
+                <button class="nav_menu" onclick="location.href='csm_review.html'">CSM 리뷰</button>
+            </li>
+            <li>
+                <button class="nav_icon">🖼️</button>
+                <button class="nav_menu" onclick="location.href='gallery.html'">갤러리</button>
+            </li>
+            <li>
+                <button class="nav_icon">👤</button>
+                <button class="nav_menu" onclick="location.href='profile.html'">자기소개</button>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <div class="hero_avatar">조</div>
+        <div class="hero_text">
+            <span class="hero_badge">컴퓨터공학과 3학년</span>
+            <h2>안녕하세요, 조성민입니다 👋</h2>
+            <p>장안대학교 재학 중이며 맛집 탐방을 좋아합니다.<br>
+               직접 먹어보고 솔직하게 리뷰합니다.</p>
+        </div>
+    </div>
+
+    <p class="section_title">🍜 최근 리뷰</p>
+
+    <div class="thumbs_wrapper">
+        <div class="row g-3" id="cardGrid">
+
+            <!-- data-name: 검색 키워드 -->
+            <div class="col-lg-3 col-md-6 col-12 card_col" data-name="말렌카 케이크 수원">
+                <div class="food_card">
+                    <img src="imgs/food_imgs/음식 (1).jpg" alt="말렌카 케이크" onclick="location.href='csm_review.html?slide=1'" style="cursor:pointer;">
+                    <div class="food_card_body">
+                        <div class="food_card_rating">★★★★☆</div>
+                        <h2 onclick="location.href='csm_review.html?slide=1'" style="cursor:pointer;">말렌카 케이크</h2>
+                        <div class="food_card_meta"><span>📍 수원</span><span>👁 조회수 0</span></div>
+                        <div class="card_actions">
+                            <button class="card_like_btn" id="like_1" onclick="toggleCardLike(1,this)">❤️ <span class="clc">0</span></button>
+                            <button class="card_cmt_btn" onclick="toggleCardCmt(1,this)">💬 <span id="cc_1">0</span></button>
+                        </div>
+                    </div>
+                    <div class="card_cmt_box" id="card_cmt_1">
+                        <div class="card_cmt_list" id="card_cmt_list_1"><p class="cmt_empty">첫 댓글을 남겨보세요!</p></div>
+                        <div class="card_cmt_input_row" id="card_input_row_1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 card_col" data-name="오페라 케이크 강남">
+                <div class="food_card">
+                    <img src="imgs/food_imgs/음식 (7).jpg" alt="오페라 케이크" onclick="location.href='csm_review.html?slide=2'" style="cursor:pointer;">
+                    <div class="food_card_body">
+                        <div class="food_card_rating">★★★★★</div>
+                        <h2 onclick="location.href='csm_review.html?slide=2'" style="cursor:pointer;">오페라 케이크</h2>
+                        <div class="food_card_meta"><span>📍 강남</span><span>👁 조회수 0</span></div>
+                        <div class="card_actions">
+                            <button class="card_like_btn" id="like_2" onclick="toggleCardLike(2,this)">❤️ <span class="clc">0</span></button>
+                            <button class="card_cmt_btn" onclick="toggleCardCmt(2,this)">💬 <span id="cc_2">0</span></button>
+                        </div>
+                    </div>
+                    <div class="card_cmt_box" id="card_cmt_2">
+                        <div class="card_cmt_list" id="card_cmt_list_2"><p class="cmt_empty">첫 댓글을 남겨보세요!</p></div>
+                        <div class="card_cmt_input_row" id="card_input_row_2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 card_col" data-name="안심 스테이크 가니쉬 강남">
+                <div class="food_card">
+                    <img src="imgs/food_imgs/음식 (8).jpg" alt="안심 스테이크" onclick="location.href='csm_review.html?slide=3'" style="cursor:pointer;">
+                    <div class="food_card_body">
+                        <div class="food_card_rating">★★★☆☆</div>
+                        <h2 onclick="location.href='csm_review.html?slide=3'" style="cursor:pointer;">안심 스테이크와 가니쉬</h2>
+                        <div class="food_card_meta"><span>📍 강남</span><span>👁 조회수 0</span></div>
+                        <div class="card_actions">
+                            <button class="card_like_btn" id="like_3" onclick="toggleCardLike(3,this)">❤️ <span class="clc">0</span></button>
+                            <button class="card_cmt_btn" onclick="toggleCardCmt(3,this)">💬 <span id="cc_3">0</span></button>
+                        </div>
+                    </div>
+                    <div class="card_cmt_box" id="card_cmt_3">
+                        <div class="card_cmt_list" id="card_cmt_list_3"><p class="cmt_empty">첫 댓글을 남겨보세요!</p></div>
+                        <div class="card_cmt_input_row" id="card_input_row_3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 card_col" data-name="연어 카르파초 강남">
+                <div class="food_card">
+                    <img src="imgs/food_imgs/음식 (9).jpg" alt="연어 카르파초" onclick="location.href='csm_review.html?slide=4'" style="cursor:pointer;">
+                    <div class="food_card_body">
+                        <div class="food_card_rating">★★★★☆</div>
+                        <h2 onclick="location.href='csm_review.html?slide=4'" style="cursor:pointer;">연어 카르파초</h2>
+                        <div class="food_card_meta"><span>📍 강남</span><span>👁 조회수 0</span></div>
+                        <div class="card_actions">
+                            <button class="card_like_btn" id="like_4" onclick="toggleCardLike(4,this)">❤️ <span class="clc">0</span></button>
+                            <button class="card_cmt_btn" onclick="toggleCardCmt(4,this)">💬 <span id="cc_4">0</span></button>
+                        </div>
+                    </div>
+                    <div class="card_cmt_box" id="card_cmt_4">
+                        <div class="card_cmt_list" id="card_cmt_list_4"><p class="cmt_empty">첫 댓글을 남겨보세요!</p></div>
+                        <div class="card_cmt_input_row" id="card_input_row_4"></div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="no_result" id="noResult">
+            🔍 "<span id="noResultKeyword"></span>" 에 대한 결과가 없어요.
+        </div>
+    </div>
+
+    <script>
+        function toggleNav() {
+            document.getElementById('sideNav').classList.toggle('nav_hidden');
+        }
+
+
+        function getUser() { return sessionStorage.getItem('isLoggedIn')==='true' ? sessionStorage.getItem('userName') : null; }
+        function getCardData() { return JSON.parse(localStorage.getItem('csm_card_data') || '{"likes":{},"comments":{}}'); }
+        function saveCardData(d) { localStorage.setItem('csm_card_data', JSON.stringify(d)); }
+
+        function initCards() {
+            const d = getCardData();
+            const user = getUser();
+            [1,2,3,4].forEach(id => {
+                const likes = d.likes[id] || [];
+                const cmts = d.comments[id] || [];
+                // 좋아요 수
+                const likeBtn = document.getElementById('like_'+id);
+                if (likeBtn) {
+                    likeBtn.querySelector('.clc').textContent = likes.length;
+                    if (user && likes.includes(user)) likeBtn.classList.add('liked');
+                }
+                // 댓글 수
+                const cc = document.getElementById('cc_'+id);
+                if (cc) cc.textContent = cmts.length;
+                // 댓글 목록
+                renderCardCmts(id, cmts);
+                // 댓글 입력창
+                const row = document.getElementById('card_input_row_'+id);
+                if (row) {
+                    if (user) {
+                        row.innerHTML = `<input class="card_cmt_input" id="ci_${id}" placeholder="댓글 입력..." onkeydown="if(event.key==='Enter')submitCardCmt(${id})"><button class="card_cmt_submit" onclick="submitCardCmt(${id})">등록</button>`;
+                    } else {
+                        row.innerHTML = '<p class="card_no_login">로그인 후 댓글을 달 수 있어요</p>';
+                    }
+                }
+            });
+        }
+
+        function renderCardCmts(id, cmts) {
+            const list = document.getElementById('card_cmt_list_'+id);
+            if (!list) return;
+            if (cmts.length === 0) { list.innerHTML = '<p class="cmt_empty">첫 댓글을 남겨보세요!</p>'; return; }
+            list.innerHTML = cmts.map(c => `<div class="cmt_item"><span class="cmt_author">${c.author}</span><span class="cmt_text">${c.text}</span><span class="cmt_time">${c.time}</span></div>`).join('');
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function toggleCardLike(id, btn) {
+            const user = getUser();
+            if (!user) { alert('로그인 후 좋아요를 누를 수 있어요!'); return; }
+            const d = getCardData();
+            if (!d.likes[id]) d.likes[id] = [];
+            if (d.likes[id].includes(user)) {
+                d.likes[id] = d.likes[id].filter(u => u !== user);
+                btn.classList.remove('liked');
+            } else {
+                d.likes[id].push(user);
+                btn.classList.add('liked');
+            }
+            btn.querySelector('.clc').textContent = d.likes[id].length;
+            saveCardData(d);
+        }
+
+        function toggleCardCmt(id, btn) {
+            const box = document.getElementById('card_cmt_'+id);
+            box.classList.toggle('open');
+            btn.style.color = box.classList.contains('open') ? '#e67e22' : '';
+            btn.style.borderColor = box.classList.contains('open') ? '#e67e22' : '';
+        }
+
+        function submitCardCmt(id) {
+            const user = getUser();
+            if (!user) { alert('로그인 후 댓글을 달 수 있어요!'); return; }
+            const input = document.getElementById('ci_'+id);
+            const text = input.value.trim();
+            if (!text) return;
+            const d = getCardData();
+            if (!d.comments[id]) d.comments[id] = [];
+            const now = new Date();
+            const time = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+            d.comments[id].push({ author: user, text, time });
+            saveCardData(d);
+            renderCardCmts(id, d.comments[id]);
+            document.getElementById('cc_'+id).textContent = d.comments[id].length;
+            input.value = '';
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('loginBtn');
+            if (btn && sessionStorage.getItem('isLoggedIn') === 'true') {
+                btn.textContent = '로그아웃'; btn.classList.add('logged');
+            }
+            initCards();
+        });
+
+        function searchCards() {
+            const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+            const cards = document.querySelectorAll('.card_col');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                if (keyword === '' || name.includes(keyword)) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            const noResult = document.getElementById('noResult');
+            if (visibleCount === 0 && keyword !== '') {
+                document.getElementById('noResultKeyword').textContent = keyword;
+                noResult.classList.add('show');
+            } else {
+                noResult.classList.remove('show');
+            }
+        }
+    </script>
+
+    <script>
+        
+
+        function handleLoginClick() {
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                sessionStorage.removeItem("isLoggedIn");
+                sessionStorage.removeItem("userName");
+                location.reload();
+            } else {
+                location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

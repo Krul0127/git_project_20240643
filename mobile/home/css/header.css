@@ -1,0 +1,85 @@
+.header{
+position: fixed;/*헤더가 위에 붙어서 움직이지 않게 고정*/
+top: 0;
+left: 0;
+width: 100%;
+background-color: #fff;
+box-shadow: 0 0 3px #000;
+z-index: 20;
+}
+.header_wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    height: 60px;
+    padding: 0 16px;
+
+}
+.header_start{
+    height: 40px;
+    line-height: 40px;
+}
+.header_hambuger{
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+}
+.header_title{
+    font-size: 1.2rem;
+    margin-left: 6px;
+}
+.header_center{
+    width: 50%;
+}
+.header_form{
+    display: flex;
+    max-width: 100%;
+}
+.header_text_input{
+    width: calc(100% - 60px);
+    height: 40px;
+    padding: 0 6px;
+    border: 1px solid #898989;
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+}
+.header_input_button{
+    width: 60px;
+    height: 40px;
+    border: 1px solid #898989;
+    border-left: none;
+    border-radius: 0 2px 2px 0;    
+}
+.header_end{
+    display: flex;
+
+}
+.header_search{
+    display: none;
+    height: 40px;
+    margin-right: 5px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+}
+.header_profile{
+    width: 40px;
+    height: 40px;
+    background-image: url("../imgs/logo.svg");
+    background-size: 40px 40px;
+}
+/*800px보다 작아지면 title 안보이게 반응형 웹*/
+@media screen and (max-width:800px){
+    .header_title{
+        display: none;
+    }
+}
+/*400px보다 작아지면 검색창을 안보이게 그리고 돋보기 보이게 반응형 웹*/
+@media screen and (max-width:400px){
+    .header_center{
+        display: none;
+    }
+    .header_search{
+        display: block;
+    }
+}

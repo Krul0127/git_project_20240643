@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - ChoSungmin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/login.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #111;
+            color: #eee;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+        }
+
+        .login_box {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login_logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login_logo span {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+        }
+        .login_logo span b {
+            color: #e67e22;
+        }
+        .login_logo p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        .login_label {
+            font-size: 0.82rem;
+            color: #888;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .login_input {
+            width: 100%;
+            height: 44px;
+            background-color: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #eee;
+            padding: 0 14px;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .login_input:focus {
+            border-color: #e67e22;
+            outline: none;
+        }
+        .login_input::placeholder { color: #555; }
+
+        .login_btn {
+            width: 100%;
+            height: 46px;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: background-color 0.2s;
+        }
+        .login_btn:hover { background-color: #cf6d17; }
+
+        .login_error {
+            display: none;
+            background-color: #2a1a1a;
+            border: 1px solid #c0392b;
+            color: #e74c3c;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .login_error.show { display: block; }
+
+        .login_back {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login_back button {
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .login_back button:hover { color: #e67e22; }
+    </style>
+</head>
+
+<body>
+
+    <div class="login_box">
+        <div class="login_logo">
+            <span onclick="location.href='exam01.html'">Cho<b>Sungmin</b></span>
+            <p>로그인 후 이용하세요</p>
+        </div>
+
+        <div class="login_error" id="loginError">
+            아이디 또는 비밀번호가 틀렸습니다.
+        </div>
+
+        <label class="login_label" for="userId">아이디</label>
+        <input class="login_input" type="text" id="userId" placeholder="아이디 입력"
+            onkeydown="if(event.key==='Enter') doLogin()">
+
+        <label class="login_label" for="userPw">비밀번호</label>
+        <input class="login_input" type="password" id="userPw" placeholder="비밀번호 입력"
+            onkeydown="if(event.key==='Enter') doLogin()">
+
+        <button class="login_btn" onclick="doLogin()">로그인</button>
+
+        <div class="login_back">
+            <button onclick="location.href='register.html'">계정이 없으신가요? 회원가입</button>
+        </div>
+        <div class="login_back" style="margin-top:8px;">
+            <button onclick="location.href='exam01.html'">← 홈으로 돌아가기</button>
+        </div>
+    </div>
+
+    <script>
+        // 아이디/비밀번호 설정 (원하는 값으로 바꾸세요)
+        const ADMIN_ID = 'admin';
+        const ADMIN_PW = '1234';
+
+        function doLogin() {
+            const id = document.getElementById('userId').value.trim();
+            const pw = document.getElementById('userPw').value;
+            const errorBox = document.getElementById('loginError');
+
+            // admin 계정 또는 localStorage 가입 계정 확인
+            const users = JSON.parse(localStorage.getItem('csm_users') || '[]');
+            const found = (id === ADMIN_ID && pw === ADMIN_PW) ||
+                          users.some(u => u.id === id && u.pw === pw);
+
+            if (found) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userName', id);
+                location.href = 'exam01.html';
+            } else {
+                errorBox.classList.add('show');
+                document.getElementById('userPw').value = '';
+                document.getElementById('userPw').focus();
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - ChoSungmin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/login.css">
+    <style>
+        body {
+            background-color: #111;
+            color: #eee;
+            min-height: 100vh;
+            padding: 40px 16px;
+            font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+        }
+
+        .register_wrap {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 상단 로고 */
+        .reg_logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .reg_logo span {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+        }
+        .reg_logo span b { color: #e67e22; }
+        .reg_logo p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        /* 스텝 표시 */
+        .step_bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 28px;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .step_circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            background: #1a1a1a;
+            color: #555;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .step_circle.active {
+            border-color: #e67e22;
+            background: #e67e22;
+            color: #fff;
+        }
+        .step_circle.done {
+            border-color: #e67e22;
+            background: #1a1a1a;
+            color: #e67e22;
+        }
+        .step_label {
+            font-size: 0.72rem;
+            color: #555;
+        }
+        .step_label.active { color: #e67e22; }
+        .step_line {
+            width: 60px;
+            height: 2px;
+            background: #2a2a2a;
+            margin: 0 4px;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+        .step_line.done { background: #e67e22; }
+
+        /* 카드 */
+        .reg_card {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            padding: 28px 28px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .reg_card.active { display: block; }
+
+        .reg_card_title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 오류/성공 메시지 */
+        .login_error {
+            display: none;
+            background-color: #2a1a1a;
+            border: 1px solid #c0392b;
+            color: #e74c3c;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .login_error.show { display: block; }
+        .login_success {
+            display: none;
+            background-color: #1a2a1a;
+            border: 1px solid #27ae60;
+            color: #2ecc71;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .login_success.show { display: block; }
+
+        /* 버튼 영역 */
+        .reg_btn_group {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn_prev {
+            flex: 1;
+            height: 46px;
+            background: transparent;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #aaa;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn_prev:hover { border-color: #e67e22; color: #e67e22; }
+        .btn_next {
+            flex: 2;
+            height: 46px;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn_next:hover { background-color: #cf6d17; }
+
+        /* 하단 링크 */
+        .reg_footer {
+            text-align: center;
+            margin-top: 16px;
+        }
+        .reg_footer button {
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .reg_footer button:hover { color: #e67e22; }
+
+        /* 아이디 중복확인 */
+        .id_check_wrap {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .id_check_wrap .login_input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        .btn_id_check {
+            height: 44px;
+            padding: 0 14px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #ccc;
+            font-size: 0.82rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn_id_check:hover { border-color: #e67e22; color: #e67e22; }
+        .btn_id_check.confirmed { border-color: #27ae60; color: #2ecc71; background-color: #1a2a1a; }
+        .id_check_msg {
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            min-height: 18px;
+        }
+        .id_check_msg.ok { color: #2ecc71; }
+        .id_check_msg.fail { color: #e74c3c; }
+    </style>
+</head>
+
+<body>
+<div class="register_wrap">
+
+    <!-- 로고 -->
+    <div class="reg_logo">
+        <span onclick="location.href='exam01.html'">Cho<b>Sungmin</b></span>
+        <p>회원가입</p>
+    </div>
+
+    <!-- 스텝 바 -->
+    <div class="step_bar">
+        <div class="step">
+            <div class="step_circle active" id="step1_circle">1</div>
+            <div class="step_label active" id="step1_label">계정 정보</div>
+        </div>
+        <div class="step_line" id="line1"></div>
+        <div class="step">
+            <div class="step_circle" id="step2_circle">2</div>
+            <div class="step_label" id="step2_label">개인 정보</div>
+        </div>
+        <div class="step_line" id="line2"></div>
+        <div class="step">
+            <div class="step_circle" id="step3_circle">3</div>
+            <div class="step_label" id="step3_label">약관 동의</div>
+        </div>
+    </div>
+
+    <!-- 오류/성공 메시지 -->
+    <div class="login_error" id="errorMsg"></div>
+    <div class="login_success" id="successMsg"></div>
+
+    <!-- ── 카드 1: 계정 정보 ── -->
+    <div class="reg_card active" id="card1">
+        <div class="reg_card_title">🔑 계정 정보</div>
+
+        <label class="login_label" for="regId">아이디 *</label>
+        <div class="id_check_wrap">
+            <input class="login_input" type="text" id="regId" placeholder="영문, 숫자 4~12자" oninput="resetIdCheck()">
+            <button class="btn_id_check" type="button" onclick="checkDuplicate()">중복확인</button>
+        </div>
+        <div class="id_check_msg" id="idCheckMsg"></div>
+
+        <label class="login_label" for="regPw">비밀번호 *</label>
+        <input class="login_input" type="password" id="regPw" placeholder="6자 이상">
+
+        <label class="login_label" for="regPwCheck">비밀번호 확인 *</label>
+        <input class="login_input" type="password" id="regPwCheck" placeholder="비밀번호 재입력">
+
+        <div class="reg_btn_group">
+            <button class="btn_next" style="flex:1;" onclick="goStep(2)">다음 →</button>
+        </div>
+    </div>
+
+    <!-- ── 카드 2: 개인 정보 ── -->
+    <div class="reg_card" id="card2">
+        <div class="reg_card_title">👤 개인 정보</div>
+
+        <label class="login_label" for="regName">이름 *</label>
+        <input class="login_input" type="text" id="regName" placeholder="실명 입력">
+
+        <label class="login_label" for="regEmail">이메일 *</label>
+        <input class="login_input" type="email" id="regEmail" placeholder="example@email.com">
+
+        <label class="login_label">성별</label>
+        <div class="gender_group">
+            <label class="gender_item">
+                <input type="radio" name="gender" value="male">
+                <span>남성</span>
+            </label>
+            <label class="gender_item">
+                <input type="radio" name="gender" value="female">
+                <span>여성</span>
+            </label>
+            <label class="gender_item">
+                <input type="radio" name="gender" value="none" checked>
+                <span>선택 안함</span>
+            </label>
+        </div>
+
+        <div class="reg_btn_group">
+            <button class="btn_prev" onclick="goStep(1)">← 이전</button>
+            <button class="btn_next" onclick="goStep(3)">다음 →</button>
+        </div>
+    </div>
+
+    <!-- ── 카드 3: 약관 동의 ── -->
+    <div class="reg_card" id="card3">
+        <div class="reg_card_title">📋 약관 동의</div>
+
+        <div class="terms_box">
+            <!-- 전체 동의 -->
+            <div class="terms_all">
+                <input type="checkbox" id="agreeAll" onchange="toggleAll(this)">
+                <label class="terms_all_label" for="agreeAll">전체 동의</label>
+            </div>
+
+            <!-- 이용약관 -->
+            <div class="terms_item">
+                <input type="checkbox" id="agreeTerms" onchange="checkAll()">
+                <label class="terms_label" for="agreeTerms">
+                    <b>[필수]</b> 이용약관에 동의합니다.
+                    <button type="button" style="background:none;border:none;color:#e67e22;font-size:0.78rem;cursor:pointer;text-decoration:underline;padding:0;margin-left:4px;"
+                        data-bs-toggle="modal" data-bs-target="#termsModal">내용보기</button><br>
+                    <small style="color:#555;">서비스 이용에 관한 기본 약관입니다.</small>
+                </label>
+            </div>
+
+            <!-- 개인정보처리방침 -->
+            <div class="terms_item">
+                <input type="checkbox" id="agreePrivacy" onchange="checkAll()">
+                <label class="terms_label" for="agreePrivacy">
+                    <b>[필수]</b> 개인정보 처리방침에 동의합니다.
+                    <button type="button" style="background:none;border:none;color:#e67e22;font-size:0.78rem;cursor:pointer;text-decoration:underline;padding:0;margin-left:4px;"
+                        data-bs-toggle="modal" data-bs-target="#privacyModal">내용보기</button><br>
+                    <small style="color:#555;">수집 정보는 서비스 제공 목적으로만 사용됩니다.</small>
+                </label>
+            </div>
+        </div>
+
+        <div class="reg_btn_group">
+            <button class="btn_prev" onclick="goStep(2)">← 이전</button>
+            <button class="btn_next" onclick="doRegister()">🎉 가입 완료</button>
+        </div>
+    </div>
+
+    <div class="reg_footer">
+        <button onclick="location.href='login.html'">이미 계정이 있으신가요? 로그인</button>
+    </div>
+    <div class="reg_footer" style="margin-top:6px;">
+        <button onclick="location.href='exam01.html'">← 홈으로 돌아가기</button>
+    </div>
+
+</div>
+
+<!-- 이용약관 모달 -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content" style="background:#1a1a1a;color:#ccc;border:1px solid #333;">
+            <div class="modal-header" style="border-color:#333;">
+                <h5 class="modal-title" style="color:#fff;">이용약관</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="font-size:0.85rem;line-height:1.8;">
+                <p><b style="color:#e67e22;">제1조 (목적)</b><br>본 약관은 ChoSungmin 서비스의 이용 조건 및 절차에 관한 사항을 규정합니다.</p>
+                <p><b style="color:#e67e22;">제2조 (서비스 이용)</b><br>회원은 본 서비스를 통해 음식 리뷰 콘텐츠를 열람할 수 있습니다.</p>
+                <p><b style="color:#e67e22;">제3조 (회원의 의무)</b><br>회원은 타인의 정보를 도용하거나 부정한 방법으로 서비스를 이용해서는 안 됩니다.</p>
+                <p><b style="color:#e67e22;">제4조 (서비스 변경 및 중단)</b><br>운영자는 서비스 내용을 변경하거나 중단할 수 있으며, 사전 공지합니다.</p>
+            </div>
+            <div class="modal-footer" style="border-color:#333;">
+                <button class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 개인정보처리방침 모달 -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content" style="background:#1a1a1a;color:#ccc;border:1px solid #333;">
+            <div class="modal-header" style="border-color:#333;">
+                <h5 class="modal-title" style="color:#fff;">개인정보 처리방침</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="font-size:0.85rem;line-height:1.8;">
+                <p><b style="color:#e67e22;">1. 수집 항목</b><br>아이디, 비밀번호, 이름, 이메일, 성별</p>
+                <p><b style="color:#e67e22;">2. 수집 목적</b><br>회원 식별 및 서비스 제공, 공지사항 전달</p>
+                <p><b style="color:#e67e22;">3. 보유 기간</b><br>회원 탈퇴 시까지 보유하며 탈퇴 후 즉시 파기합니다.</p>
+                <p><b style="color:#e67e22;">4. 제3자 제공</b><br>수집된 개인정보는 제3자에게 제공되지 않습니다.</p>
+            </div>
+            <div class="modal-footer" style="border-color:#333;">
+                <button class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let idChecked = false;
+
+    function checkDuplicate() {
+        const id = document.getElementById('regId').value.trim();
+        const msg = document.getElementById('idCheckMsg');
+        const btn = document.querySelector('.btn_id_check');
+
+        if (!id || id.length < 4 || id.length > 12) {
+            msg.textContent = '아이디는 4~12자 영문/숫자로 입력해주세요.';
+            msg.className = 'id_check_msg fail';
+            return;
+        }
+
+        // localStorage에 저장된 아이디 목록과 비교 + 기본 admin 계정
+        const users = JSON.parse(localStorage.getItem('csm_users') || '[]');
+        const reserved = ['admin'];
+        const allIds = [...reserved, ...users.map(u => u.id)];
+
+        if (allIds.includes(id)) {
+            msg.textContent = '❌ 이미 사용 중인 아이디예요.';
+            msg.className = 'id_check_msg fail';
+            idChecked = false;
+            btn.classList.remove('confirmed');
+        } else {
+            msg.textContent = '✅ 사용 가능한 아이디예요.';
+            msg.className = 'id_check_msg ok';
+            idChecked = true;
+            btn.textContent = '확인완료';
+            btn.classList.add('confirmed');
+        }
+    }
+
+    function resetIdCheck() {
+        idChecked = false;
+        const btn = document.querySelector('.btn_id_check');
+        const msg = document.getElementById('idCheckMsg');
+        btn.textContent = '중복확인';
+        btn.classList.remove('confirmed');
+        msg.textContent = '';
+        msg.className = 'id_check_msg';
+    }
+    let currentStep = 1;
+
+    function goStep(step) {
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.classList.remove('show');
+
+        // 유효성 검사
+        if (step > currentStep) {
+            if (currentStep === 1) {
+                const id = document.getElementById('regId').value.trim();
+                const pw = document.getElementById('regPw').value;
+                const pwCheck = document.getElementById('regPwCheck').value;
+                if (!id || id.length < 4 || id.length > 12) return showError('아이디는 4~12자로 입력해주세요.');
+                if (!idChecked) return showError('아이디 중복확인을 해주세요.');
+                if (!pw || pw.length < 6) return showError('비밀번호는 6자 이상 입력해주세요.');
+                if (pw !== pwCheck) return showError('비밀번호가 일치하지 않습니다.');
+            }
+            if (currentStep === 2) {
+                const name = document.getElementById('regName').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                if (!name) return showError('이름을 입력해주세요.');
+                if (!email || !email.includes('@')) return showError('올바른 이메일을 입력해주세요.');
+            }
+        }
+
+        // 카드 전환
+        document.getElementById('card' + currentStep).classList.remove('active');
+        document.getElementById('card' + step).classList.add('active');
+
+        // 스텝 바 업데이트
+        updateStepBar(step);
+        currentStep = step;
+        window.scrollTo(0, 0);
+    }
+
+    function updateStepBar(step) {
+        for (let i = 1; i <= 3; i++) {
+            const circle = document.getElementById('step' + i + '_circle');
+            const label = document.getElementById('step' + i + '_label');
+            circle.classList.remove('active', 'done');
+            label.classList.remove('active');
+            if (i < step) { circle.classList.add('done'); circle.textContent = '✓'; }
+            else if (i === step) { circle.classList.add('active'); circle.textContent = i; label.classList.add('active'); }
+            else { circle.textContent = i; }
+        }
+        for (let i = 1; i <= 2; i++) {
+            const line = document.getElementById('line' + i);
+            line.classList.toggle('done', i < step);
+        }
+    }
+
+    function toggleAll(checkbox) {
+        document.getElementById('agreeTerms').checked = checkbox.checked;
+        document.getElementById('agreePrivacy').checked = checkbox.checked;
+    }
+
+    function checkAll() {
+        const terms = document.getElementById('agreeTerms').checked;
+        const privacy = document.getElementById('agreePrivacy').checked;
+        document.getElementById('agreeAll').checked = terms && privacy;
+    }
+
+    function doRegister() {
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+        const agreePrivacy = document.getElementById('agreePrivacy').checked;
+        if (!agreeTerms || !agreePrivacy) return showError('필수 약관에 모두 동의해주세요.');
+
+        // localStorage에 회원 저장
+        const users = JSON.parse(localStorage.getItem('csm_users') || '[]');
+        users.push({
+            id: document.getElementById('regId').value.trim(),
+            pw: document.getElementById('regPw').value,
+            name: document.getElementById('regName').value.trim(),
+            email: document.getElementById('regEmail').value.trim()
+        });
+        localStorage.setItem('csm_users', JSON.stringify(users));
+
+        const successMsg = document.getElementById('successMsg');
+        successMsg.textContent = '🎉 회원가입 완료! 로그인 페이지로 이동합니다.';
+        successMsg.classList.add('show');
+        setTimeout(() => location.href = 'login.html', 2000);
+    }
+
+    function showError(msg) {
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.textContent = msg;
+        errorMsg.classList.add('show');
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+nav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    /* 햄버거 버튼으로 숨길 때 transition 추가 */
+    transition: transform 0.3s ease;
+}
+.nav_wrapper{
+    min-width: 200px;
+    min-height: 100vh;
+    background-color: #f8f8f8;
+    padding: 80px 0 0 0;
+    list-style: none;
+}
+.nav_wrapper li{
+    display: flex;
+    padding: 10px 16px 10px;
+}
+.nav_wrapper li:hover{
+    background-color: #eaeaea;
+}
+.nav_icon{
+    border: none;
+    background-color: transparent;
+    font-size: 1.5rem;
+}
+.nav_menu{
+    margin: 0 0 0 8px;
+    font-size: 1.2rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+/* 햄버거 버튼으로 nav 숨기기 */
+nav.nav_hidden{
+    transform: translateX(-100%);
+}
+
+/* 800px 작아지면 menu 보이지 않게 */
+@media screen and (max-width:800px){
+    .nav_menu{
+        display: none;
+    }
+    .nav_wrapper{
+        min-width: 0;
+    }
+}
+
+/* 400px 작아지면 nav 전체 숨기기 */
+@media screen and (max-width:400px){
+    .nav_wrapper{
+        display: none;
+    }
+}

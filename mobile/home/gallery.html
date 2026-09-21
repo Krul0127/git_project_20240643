@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>갤러리 - ChoSungmin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <style>
+        body { background-color: #111; color: #eee; min-height: 100vh; }
+
+        .header { background-color: #1a1a1a; box-shadow: 0 0 6px #000; }
+        .header_title { color: #fff; cursor: pointer; }
+        .header_hambuger, .header_search { color: #fff; }
+        .header_text_input { background-color: #2a2a2a; border-color: #444; color: #eee; }
+        .header_text_input::placeholder { color: #888; }
+        .header_input_button { background-color: #e67e22; border-color: #e67e22; color: #fff; font-weight: bold; cursor: pointer; }
+        .header_input_button:hover { background-color: #cf6d17; }
+        .header_login_btn { height: 32px; padding: 0 14px; margin-right: 8px; background-color: #e67e22; border: none; border-radius: 6px; color: #fff; font-size: 0.82rem; font-weight: bold; cursor: pointer; }
+        .header_login_btn.logged { background-color: #2a2a2a; border: 1px solid #444; color: #aaa; }
+
+        .nav_wrapper { background-color: #1a1a1a; border-right: 1px solid #2a2a2a; }
+        .nav_wrapper li:hover { background-color: #252525; }
+        .nav_icon, .nav_menu { color: #ccc; }
+        .nav_menu:hover { color: #e67e22; }
+        .nav_menu.active { color: #e67e22; font-weight: bold; }
+        nav { transition: transform 0.3s ease; }
+        nav.nav_hidden { transform: translateX(-100%); }
+
+        /* 갤러리 본문 */
+        .gallery_section { margin: 60px 0 40px 200px; padding: 32px 24px; }
+        .gallery_top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .gallery_top h1 { font-size: 1.4rem; font-weight: bold; color: #fff; }
+
+        /* 업로드 버튼 */
+        .upload_btn {
+            height: 38px; padding: 0 18px;
+            background-color: #e67e22; border: none; border-radius: 8px;
+            color: #fff; font-size: 0.85rem; font-weight: bold; cursor: pointer;
+        }
+        .upload_btn:hover { background-color: #cf6d17; }
+        .upload_btn:disabled { background-color: #333; color: #666; cursor: not-allowed; }
+
+        /* 필터 탭 */
+        .filter_tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter_btn { padding: 6px 18px; border: 1px solid #333; border-radius: 20px; background: transparent; color: #aaa; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .filter_btn:hover { border-color: #e67e22; color: #e67e22; }
+        .filter_btn.active { background-color: #e67e22; border-color: #e67e22; color: #fff; }
+
+        /* 그리드 */
+        .gallery_grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+        .gallery_item { background-color: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; transition: transform 0.2s; }
+        .gallery_item:hover { transform: translateY(-3px); }
+        .gallery_item.hidden { display: none; }
+
+        .gallery_item img { width: 100%; height: 180px; object-fit: cover; display: block; cursor: pointer; }
+
+        .gallery_info { padding: 10px 12px; }
+        .gallery_caption { font-size: 0.88rem; color: #ddd; margin-bottom: 4px; }
+        .gallery_author { font-size: 0.75rem; color: #666; margin-bottom: 8px; }
+
+        /* 좋아요/댓글 버튼 */
+        .gallery_actions { display: flex; gap: 10px; align-items: center; }
+        .like_btn {
+            background: none; border: 1px solid #333; border-radius: 20px;
+            color: #aaa; font-size: 0.8rem; padding: 4px 12px; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; gap: 4px;
+        }
+        .like_btn:hover { border-color: #e74c3c; color: #e74c3c; }
+        .like_btn.liked { border-color: #e74c3c; color: #e74c3c; background: #2a1a1a; }
+        .comment_toggle {
+            background: none; border: 1px solid #333; border-radius: 20px;
+            color: #aaa; font-size: 0.8rem; padding: 4px 12px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .comment_toggle:hover { border-color: #e67e22; color: #e67e22; }
+
+        /* 댓글 영역 */
+        .comment_section { display: none; padding: 10px 12px; border-top: 1px solid #2a2a2a; background: #161616; }
+        .comment_section.open { display: block; }
+        .comment_list { margin-bottom: 10px; max-height: 160px; overflow-y: auto; }
+        .comment_item { padding: 6px 0; border-bottom: 1px solid #222; font-size: 0.82rem; }
+        .comment_item:last-child { border-bottom: none; }
+        .comment_item .c_author { color: #e67e22; font-weight: bold; margin-right: 6px; }
+        .comment_item .c_text { color: #ccc; }
+        .comment_item .c_time { color: #555; font-size: 0.72rem; margin-left: 6px; }
+        .comment_input_wrap { display: flex; gap: 6px; }
+        .comment_input {
+            flex: 1; height: 34px; background: #2a2a2a; border: 1px solid #333;
+            border-radius: 6px; color: #eee; padding: 0 10px; font-size: 0.82rem;
+        }
+        .comment_input:focus { outline: none; border-color: #e67e22; }
+        .comment_submit {
+            height: 34px; padding: 0 12px; background: #e67e22; border: none;
+            border-radius: 6px; color: #fff; font-size: 0.8rem; cursor: pointer;
+        }
+        .comment_submit:hover { background: #cf6d17; }
+        .no_login_msg { font-size: 0.8rem; color: #555; text-align: center; padding: 6px 0; }
+
+        /* 업로드 모달 */
+        .upload_area {
+            border: 2px dashed #333; border-radius: 10px; padding: 32px;
+            text-align: center; cursor: pointer; transition: border-color 0.2s;
+            background: #161616;
+        }
+        .upload_area:hover { border-color: #e67e22; }
+        .upload_area.dragover { border-color: #e67e22; background: #1e1a16; }
+        .upload_preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 12px; display: none; }
+        .modal_input {
+            width: 100%; height: 40px; background: #2a2a2a; border: 1px solid #333;
+            border-radius: 8px; color: #eee; padding: 0 12px; font-size: 0.9rem; margin-top: 12px;
+        }
+        .modal_input:focus { outline: none; border-color: #e67e22; }
+        .modal_select {
+            width: 100%; height: 40px; background: #2a2a2a; border: 1px solid #333;
+            border-radius: 8px; color: #eee; padding: 0 12px; font-size: 0.9rem; margin-top: 12px;
+        }
+
+
+        .delete_btn {
+            background: none; border: 1px solid #333; border-radius: 20px;
+            color: #666; font-size: 0.8rem; padding: 4px 10px; cursor: pointer;
+            transition: all 0.2s; margin-left: auto;
+        }
+        .delete_btn:hover { border-color: #e74c3c; color: #e74c3c; background: #2a1a1a; }
+
+
+        .comment_item_top { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+        .c_actions { display: flex; gap: 4px; margin-left: auto; }
+        .c_btn_edit, .c_btn_delete {
+            background: none; border: none; font-size: 0.72rem; cursor: pointer; padding: 2px 6px;
+            border-radius: 4px; transition: all 0.2s;
+        }
+        .c_btn_edit { color: #888; }
+        .c_btn_edit:hover { color: #e67e22; background: #2a1a0a; }
+        .c_btn_delete { color: #888; }
+        .c_btn_delete:hover { color: #e74c3c; background: #2a1a1a; }
+        .comment_edit_wrap { display: flex; gap: 6px; margin-top: 4px; }
+        /* 등록 버튼 안 짤리게 */
+        .comment_input_wrap { display: flex; gap: 6px; align-items: center; }
+        .comment_submit { 
+            height: 34px; padding: 0 10px; background: #e67e22; border: none;
+            border-radius: 6px; color: #fff; font-size: 0.78rem; cursor: pointer;
+            white-space: nowrap; flex-shrink: 0;
+        }
+
+        /* 라이트박스 */
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 8px; object-fit: contain; }
+        .lightbox_close { position: absolute; top: 20px; right: 28px; font-size: 2rem; color: #fff; cursor: pointer; background: none; border: none; }
+
+        @media screen and (max-width: 800px) { .gallery_section { margin-left: 56px; } }
+        @media screen and (max-width: 400px) { .gallery_section { margin-left: 0; } .gallery_grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header_wrap">
+            <h1 class="header_start">
+                <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
+                <span class="header_title" onclick="location.href='exam01.html'">ChoSungmin</span>
+            </h1>
+            <div class="header_center">
+                <form class="header_form" onsubmit="return false">
+                    <input class="header_text_input" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="button">검색</button>
+                </form>
+            </div>
+            <div class="header_end">
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn">로그인</button>
+                <button class="header_search" aria-label="검색">&#128269;</button>
+                <div class="header_profile"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav">
+        <ul class="nav_wrapper">
+            <li><button class="nav_icon">🍽️</button><button class="nav_menu" onclick="location.href='exam01.html'">홈</button></li>
+            <li><button class="nav_icon">🎠</button><button class="nav_menu" onclick="location.href='csm_review.html'">CSM 리뷰</button></li>
+            <li><button class="nav_icon">🖼️</button><button class="nav_menu active">갤러리</button></li>
+            <li><button class="nav_icon">👤</button><button class="nav_menu" onclick="location.href='profile.html'">자기소개</button></li>
+        </ul>
+    </nav>
+
+    <div class="gallery_section">
+        <div class="gallery_top">
+            <h1>🖼️ 갤러리</h1>
+            <button class="upload_btn" id="uploadBtn" onclick="openUpload()">+ 사진 업로드</button>
+        </div>
+
+        <div class="filter_tabs">
+            <button class="filter_btn active" onclick="filterGallery('all', this)">전체</button>
+            <button class="filter_btn" onclick="filterGallery('food', this)">🍽️ 음식</button>
+            <button class="filter_btn" onclick="filterGallery('daily', this)">📷 일상</button>
+        </div>
+
+        <div class="gallery_grid" id="galleryGrid"></div>
+    </div>
+
+    <!-- 라이트박스 -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox_close" onclick="closeLightbox()">✕</button>
+        <img src="" id="lightboxImg" alt="">
+    </div>
+
+    <!-- 업로드 모달 -->
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:#1a1a1a; border:1px solid #333; color:#eee;">
+                <div class="modal-header" style="border-color:#333;">
+                    <h5 class="modal-title" style="color:#fff;">📷 사진 업로드</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload_area" id="uploadArea" onclick="document.getElementById('fileInput').click()"
+                        ondragover="event.preventDefault(); this.classList.add('dragover')"
+                        ondragleave="this.classList.remove('dragover')"
+                        ondrop="handleDrop(event)">
+                        <div id="uploadPrompt">
+                            <p style="font-size:2rem;">📁</p>
+                            <p style="color:#666; font-size:0.9rem;">클릭하거나 사진을 드래그하세요</p>
+                        </div>
+                        <img id="uploadPreview" class="upload_preview" alt="미리보기">
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(this)">
+                    <input class="modal_input" type="text" id="captionInput" placeholder="사진 설명 입력">
+                    <select class="modal_select" id="categoryInput">
+                        <option value="food">🍽️ 음식</option>
+                        <option value="daily">📷 일상</option>
+                    </select>
+                </div>
+                <div class="modal-footer" style="border-color:#333;">
+                    <button class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">취소</button>
+                    <button class="btn btn-sm" style="background:#e67e22; color:#fff; border:none;" onclick="uploadPhoto()">업로드</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── 초기 기본 사진 데이터 ──
+        const defaultPhotos = [
+            { id: 1, src: 'imgs/food_imgs/음식 (1).jpg', caption: '말렌카 케이크', category: 'food', author: 'admin', likes: [], comments: [] },
+            { id: 2, src: 'imgs/food_imgs/음식 (7).jpg', caption: '오페라 케이크', category: 'food', author: 'admin', likes: [], comments: [] },
+            { id: 3, src: 'imgs/food_imgs/음식 (8).jpg', caption: '안심 스테이크', category: 'food', author: 'admin', likes: [], comments: [] },
+            { id: 4, src: 'imgs/food_imgs/음식 (9).jpg', caption: '연어 카르파초', category: 'food', author: 'admin', likes: [], comments: [] },
+            { id: 5, src: 'imgs/pet1.jpg', caption: '일상 사진 1', category: 'daily', author: 'admin', likes: [], comments: [] },
+            { id: 6, src: 'imgs/pet2.jpg', caption: '일상 사진 2', category: 'daily', author: 'admin', likes: [], comments: [] },
+            { id: 7, src: 'imgs/pet3.jpg', caption: '일상 사진 3', category: 'daily', author: 'admin', likes: [], comments: [] },
+            { id: 8, src: 'imgs/pet4.jpg', caption: '일상 사진 4', category: 'daily', author: 'admin', likes: [], comments: [] },
+        ];
+
+        let currentFilter = 'all';
+        let uploadedImageData = null;
+
+        function getPhotos() {
+            const saved = localStorage.getItem('csm_photos');
+            return saved ? JSON.parse(saved) : defaultPhotos;
+        }
+        function savePhotos(photos) {
+            localStorage.setItem('csm_photos', JSON.stringify(photos));
+        }
+        function getUser() {
+            return sessionStorage.getItem('isLoggedIn') === 'true' ? sessionStorage.getItem('userName') : null;
+        }
+
+        // ── 갤러리 렌더링 ──
+        function renderGallery(filter = 'all') {
+            const photos = getPhotos();
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' ? photos : photos.filter(p => p.category === filter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="color:#555; text-align:center; padding:40px 0; grid-column:1/-1;">사진이 없어요. 첫 사진을 업로드해보세요! 📷</p>';
+                return;
+            }
+
+            filtered.forEach(photo => {
+                const user = getUser();
+                const cardD = (photo.id >= 1 && photo.id <= 4) ? getCardData() : null;
+                const sharedLikes = cardD ? (cardD.likes[photo.id] || []) : photo.likes;
+                const liked = user && sharedLikes.includes(user);
+                const likeCount = sharedLikes.length;
+                const commentCount = photo.comments.length;
+
+                const item = document.createElement('div');
+                item.className = 'gallery_item';
+                item.dataset.category = photo.category;
+                item.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.caption}" onclick="openLightbox('${photo.src}')">
+                    <div class="gallery_info">
+                        <div class="gallery_caption">${photo.caption}</div>
+                        <div class="gallery_author">by ${photo.author}</div>
+                        <div class="gallery_actions">
+                            <button class="like_btn ${liked ? 'liked' : ''}" onclick="toggleLike(${photo.id}, this)">
+                                ❤️ <span class="like_count">${likeCount}</span>
+                            </button>
+                            <button class="comment_toggle" onclick="toggleComment(${photo.id}, this)">
+                                💬 ${commentCount}
+                            </button>
+                            ${user && (user === photo.author || user === 'admin')
+                                ? `<button class="delete_btn" onclick="deletePhoto(${photo.id})">🗑️</button>`
+                                : ''}
+                        </div>
+                    </div>
+                    <div class="comment_section" id="comments_${photo.id}">
+                        <div class="comment_list" id="comment_list_${photo.id}">
+                            ${renderComments(photo.comments, photo.id)}
+                        </div>
+                        ${user
+                            ? `<div class="comment_input_wrap">
+                                <input class="comment_input" id="comment_input_${photo.id}" placeholder="댓글 입력..." onkeydown="if(event.key==='Enter') submitComment(${photo.id})">
+                                <button class="comment_submit" onclick="submitComment(${photo.id})">등록</button>
+                               </div>`
+                            : `<p class="no_login_msg">💬 로그인 후 댓글을 달 수 있어요</p>`
+                        }
+                    </div>`;
+                grid.appendChild(item);
+            });
+        }
+
+        function renderComments(comments, photoId) {
+            const user = getUser();
+            if (comments.length === 0) return '<p style="color:#555; font-size:0.78rem; text-align:center; padding:4px 0;">첫 댓글을 남겨보세요!</p>';
+            return comments.map((c, idx) => `
+                <div class="comment_item" id="comment_${photoId}_${idx}">
+                    <div class="comment_item_top">
+                        <span class="c_author">${c.author}</span>
+                        <span class="c_text" id="c_text_${photoId}_${idx}">${c.text}</span>
+                        <span class="c_time">${c.time}</span>
+                        ${user && (user === c.author || user === 'admin') ? `
+                        <div class="c_actions">
+                            <button class="c_btn_edit" onclick="editComment(${photoId}, ${idx})">수정</button>
+                            <button class="c_btn_delete" onclick="deleteComment(${photoId}, ${idx})">삭제</button>
+                        </div>` : ''}
+                    </div>
+                    <div class="comment_edit_wrap" id="edit_wrap_${photoId}_${idx}" style="display:none;">
+                        <input class="comment_input" id="edit_input_${photoId}_${idx}" value="${c.text}">
+                        <button class="comment_submit" onclick="saveComment(${photoId}, ${idx})">저장</button>
+                        <button class="comment_submit" style="background:#444;" onclick="cancelEdit(${photoId}, ${idx})">취소</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        // ── 공유 데이터 (홈/csm_review/갤러리 공통) ──
+        function getCardData() { return JSON.parse(localStorage.getItem('csm_card_data') || '{"likes":{},"comments":{}}'); }
+        function saveCardData(d) { localStorage.setItem('csm_card_data', JSON.stringify(d)); }
+
+        // ── 좋아요 ──
+        function toggleLike(photoId, btn) {
+            const user = getUser();
+            if (!user) { alert('로그인 후 좋아요를 누를 수 있어요!'); return; }
+            const photos = getPhotos();
+            const photo = photos.find(p => p.id === photoId);
+            if (!photo) return;
+
+            if (photoId >= 1 && photoId <= 4) {
+                // 기본 사진: csm_card_data 공유
+                const d = getCardData();
+                if (!d.likes[photoId]) d.likes[photoId] = [];
+                if (d.likes[photoId].includes(user)) {
+                    d.likes[photoId] = d.likes[photoId].filter(u => u !== user);
+                    btn.classList.remove('liked');
+                } else {
+                    d.likes[photoId].push(user);
+                    btn.classList.add('liked');
+                }
+                btn.querySelector('.like_count').textContent = d.likes[photoId].length;
+                saveCardData(d);
+            } else {
+                // 업로드 사진: csm_photos 에만 저장
+                if (photo.likes.includes(user)) {
+                    photo.likes = photo.likes.filter(u => u !== user);
+                    btn.classList.remove('liked');
+                } else {
+                    photo.likes.push(user);
+                    btn.classList.add('liked');
+                }
+                btn.querySelector('.like_count').textContent = photo.likes.length;
+                savePhotos(photos);
+            }
+        }
+
+        // ── 댓글 토글 ──
+        function toggleComment(photoId, btn) {
+            const section = document.getElementById('comments_' + photoId);
+            section.classList.toggle('open');
+            btn.style.color = section.classList.contains('open') ? '#e67e22' : '';
+            btn.style.borderColor = section.classList.contains('open') ? '#e67e22' : '';
+        }
+
+        // ── 댓글 등록 ──
+        function submitComment(photoId) {
+            const user = getUser();
+            if (!user) { alert('로그인 후 댓글을 달 수 있어요!'); return; }
+
+            const input = document.getElementById('comment_input_' + photoId);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const photos = getPhotos();
+            const photo = photos.find(p => p.id === photoId);
+            if (!photo) return;
+
+            const now = new Date();
+            const time = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+            photo.comments.push({ author: user, text, time });
+            savePhotos(photos);
+
+            const list = document.getElementById('comment_list_' + photoId);
+            list.innerHTML = renderComments(photo.comments, photoId);
+            list.scrollTop = list.scrollHeight;
+            input.value = '';
+
+            // 댓글 수 업데이트
+            const toggle = document.querySelector(`[onclick="toggleComment(${photoId}, this)"]`);
+            if (toggle) toggle.textContent = `💬 ${photo.comments.length}`;
+        }
+
+
+
+        // ── 댓글 수정 ──
+        function editComment(photoId, idx) {
+            document.getElementById(`c_text_${photoId}_${idx}`).style.display = 'none';
+            document.getElementById(`edit_wrap_${photoId}_${idx}`).style.display = 'flex';
+            document.getElementById(`edit_input_${photoId}_${idx}`).focus();
+        }
+
+        function cancelEdit(photoId, idx) {
+            document.getElementById(`c_text_${photoId}_${idx}`).style.display = '';
+            document.getElementById(`edit_wrap_${photoId}_${idx}`).style.display = 'none';
+        }
+
+        function saveComment(photoId, idx) {
+            const newText = document.getElementById(`edit_input_${photoId}_${idx}`).value.trim();
+            if (!newText) return;
+            const photos = getPhotos();
+            const photo = photos.find(p => p.id === photoId);
+            if (!photo) return;
+            photo.comments[idx].text = newText;
+            savePhotos(photos);
+            const list = document.getElementById('comment_list_' + photoId);
+            list.innerHTML = renderComments(photo.comments, photoId);
+        }
+
+        // ── 댓글 삭제 ──
+        function deleteComment(photoId, idx) {
+            if (!confirm('댓글을 삭제할까요?')) return;
+            const photos = getPhotos();
+            const photo = photos.find(p => p.id === photoId);
+            if (!photo) return;
+            photo.comments.splice(idx, 1);
+            savePhotos(photos);
+            const list = document.getElementById('comment_list_' + photoId);
+            list.innerHTML = renderComments(photo.comments, photoId);
+            const toggle = document.querySelector(`[onclick="toggleComment(${photoId}, this)"]`);
+            if (toggle) toggle.textContent = `💬 ${photo.comments.length}`;
+        }
+        // ── 사진 삭제 ──
+        function deletePhoto(photoId) {
+            if (!confirm('이 사진을 삭제할까요?')) return;
+            const user = getUser();
+            let photos = getPhotos();
+            const photo = photos.find(p => p.id === photoId);
+            if (!photo) return;
+            if (photo.author !== user && user !== 'admin') {
+                alert('본인 사진만 삭제할 수 있어요.');
+                return;
+            }
+            photos = photos.filter(p => p.id !== photoId);
+            savePhotos(photos);
+            renderGallery(currentFilter);
+        }
+        // ── 사진 업로드 ──
+        function openUpload() {
+            const user = getUser();
+            if (!user) { alert('로그인 후 사진을 업로드할 수 있어요!'); return; }
+            new bootstrap.Modal(document.getElementById('uploadModal')).show();
+        }
+
+        function previewImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                uploadedImageData = e.target.result;
+                const preview = document.getElementById('uploadPreview');
+                preview.src = uploadedImageData;
+                preview.style.display = 'block';
+                document.getElementById('uploadPrompt').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const fakeInput = { files: [file] };
+                previewImage(fakeInput);
+            }
+        }
+
+        function uploadPhoto() {
+            if (!uploadedImageData) { alert('사진을 선택해주세요!'); return; }
+            const caption = document.getElementById('captionInput').value.trim() || '무제';
+            const category = document.getElementById('categoryInput').value;
+            const user = getUser();
+
+            const photos = getPhotos();
+            const newId = photos.length > 0 ? Math.max(...photos.map(p => p.id)) + 1 : 1;
+            photos.unshift({ id: newId, src: uploadedImageData, caption, category, author: user, likes: [], comments: [] });
+            savePhotos(photos);
+
+            bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+            uploadedImageData = null;
+            document.getElementById('uploadPreview').style.display = 'none';
+            document.getElementById('uploadPrompt').style.display = 'block';
+            document.getElementById('captionInput').value = '';
+            document.getElementById('fileInput').value = '';
+
+            renderGallery(currentFilter);
+        }
+
+        // ── 필터 ──
+        function filterGallery(category, btn) {
+            currentFilter = category;
+            document.querySelectorAll('.filter_btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGallery(category);
+        }
+
+        // ── 라이트박스 ──
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightbox').classList.add('open');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        // ── 헤더 ──
+        function toggleNav() { document.getElementById('sideNav').classList.toggle('nav_hidden'); }
+
+        function handleLoginClick() {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                sessionStorage.removeItem('isLoggedIn');
+                sessionStorage.removeItem('userName');
+                location.reload();
+            } else {
+                location.href = 'login.html';
+            }
+        }
+
+        // ── 초기화 ──
+        window.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('loginBtn');
+            const user = getUser();
+            if (user) {
+                btn.textContent = '로그아웃';
+                btn.classList.add('logged');
+            }
+            // 업로드 버튼 비활성화 (비로그인)
+            if (!user) {
+                document.getElementById('uploadBtn').title = '로그인 후 업로드 가능해요';
+            }
+            renderGallery();
+        });
+    </script>
+
+</body>
+</html>

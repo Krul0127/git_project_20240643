@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSM Review - ChoSungmin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <style>
+        body { background-color: #111; color: #eee; min-height: 100vh; }
+
+        .header { background-color: #1a1a1a; box-shadow: 0 0 6px #000; }
+        .header_title { color: #fff; }
+        .header_hambuger, .header_search { color: #fff; }
+        .header_text_input { background-color: #2a2a2a; border-color: #444; color: #eee; }
+        .header_text_input::placeholder { color: #888; }
+        .header_input_button { background-color: #e67e22; border-color: #e67e22; color: #fff; font-weight: bold; cursor: pointer; }
+        .header_input_button:hover { background-color: #cf6d17; }
+
+        .nav_wrapper { background-color: #1a1a1a; border-right: 1px solid #2a2a2a; }
+        .nav_wrapper li:hover { background-color: #252525; }
+        .nav_icon, .nav_menu { color: #ccc; }
+        .nav_menu:hover { color: #e67e22; }
+        .nav_menu.active { color: #e67e22; font-weight: bold; }
+
+        nav { transition: transform 0.3s ease; }
+        nav.nav_hidden { transform: translateX(-100%); }
+
+        /* 캐러셀 영역: 헤더(60px) + nav(200px) 여백 */
+        .carousel_section {
+            margin: 60px 0 0 200px;
+            padding: 40px 32px;
+        }
+        .carousel_section h1 {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+
+        /* 리뷰 레이아웃: 사진 + 댓글 나란히 */
+        .review_layout {
+            display: grid;
+            grid-template-columns: 65% 35%;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .review_carousel_wrap { min-width: 0; }
+        .review_img {
+            height: 460px;
+            object-fit: cover;
+        }
+        .review_actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .rev_like_btn {
+            background: none; border: 1px solid #333; border-radius: 20px;
+            color: #aaa; font-size: 0.85rem; padding: 5px 16px; cursor: pointer; transition: all 0.2s;
+        }
+        .rev_like_btn:hover { border-color: #e74c3c; color: #e74c3c; }
+        .rev_like_btn.liked { border-color: #e74c3c; color: #e74c3c; background: #2a1a1a; }
+
+        /* 댓글 패널 */
+        .review_comment_wrap {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+        }
+        .rev_cmt_title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .rev_cmt_list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .rev_cmt_input_area { flex-shrink: 0; }
+        .rev_cmt_item {
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 0.82rem;
+        }
+        .rev_cmt_item:last-child { border-bottom: none; }
+        .rev_cmt_author { color: #e67e22; font-weight: bold; margin-right: 6px; }
+        .rev_cmt_text { color: #ccc; }
+        .rev_cmt_time { color: #555; font-size: 0.72rem; display: block; margin-top: 2px; }
+        .rev_cmt_empty { color: #555; font-size: 0.82rem; text-align: center; padding: 20px 0; }
+        .rev_cmt_input_wrap { display: flex; gap: 6px; }
+        .rev_cmt_input {
+            flex: 1; height: 36px; background: #2a2a2a; border: 1px solid #333;
+            border-radius: 6px; color: #eee; padding: 0 10px; font-size: 0.82rem;
+        }
+        .rev_cmt_input:focus { outline: none; border-color: #e67e22; }
+        .rev_cmt_submit {
+            height: 36px; padding: 0 12px; background: #e67e22; border: none;
+            border-radius: 6px; color: #fff; font-size: 0.8rem; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+        }
+        .rev_no_login { color: #555; font-size: 0.8rem; text-align: center; padding: 8px 0; }
+
+        @media screen and (max-width: 800px) {
+            .review_layout { grid-template-columns: 1fr; }
+            .review_img { height: 280px; }
+            .review_comment_wrap { height: 300px; }
+        }
+        @media screen and (max-width: 800px) {
+            .carousel_section { margin-left: 56px; }
+        }
+        @media screen and (max-width: 400px) {
+            .carousel_section { margin-left: 0; }
+        }
+    
+        /* 로그인 버튼 */
+        .header_login_btn {
+            height: 32px;
+            padding: 0 14px;
+            margin-right: 8px;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .header_login_btn:hover { background-color: #cf6d17; }
+        .header_login_btn.logged { background-color: #2a2a2a; border: 1px solid #444; color: #aaa; }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header_wrap">
+            <h1 class="header_start">
+                <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
+                <span class="header_title" onclick="location.href='exam01.html'" style="cursor:pointer;">ChoSungmin</span>
+            </h1>
+            <div class="header_center">
+                <form class="header_form" onsubmit="return false">
+                    <input class="header_text_input" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="submit">검색</button>
+                </form>
+            </div>
+            <div class="header_end">
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn">로그인</button>
+                <button class="header_search" aria-label="검색">&#128269;</button>
+                <div class="header_profile"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav">
+        <ul class="nav_wrapper">
+            <li>
+                <button class="nav_icon">🍽️</button>
+                <button class="nav_menu" onclick="location.href='exam01.html'">홈</button>
+            </li>
+            <li>
+                <button class="nav_icon">🎠</button>
+                <!-- 현재 페이지: active -->
+                <button class="nav_menu active" onclick="location.href='csm_review.html'">CSM 리뷰</button>
+            </li>
+            <li>
+                <button class="nav_icon">🖼️</button>
+                <button class="nav_menu" onclick="location.href='gallery.html'">갤러리</button>
+            </li>
+            <li>
+                <button class="nav_icon">👤</button>
+                <button class="nav_menu" onclick="location.href='profile.html'">자기소개</button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 캐러셀 본문 -->
+    <div class="carousel_section">
+        <h1>🍜 CSM Review</h1>
+
+        <div class="review_layout">
+            <!-- 왼쪽: 캐러셀 -->
+            <div class="review_carousel_wrap">
+                <div id="carouselExampleIndicators" class="carousel slide">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    </div>
+                    <div class="carousel-inner" style="border-radius:10px; overflow:hidden;">
+                        <div class="carousel-item active">
+                            <img src="imgs/food_imgs/음식 (1).jpg" class="d-block w-100 review_img" alt="말렌카 케이크">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="imgs/food_imgs/음식 (7).jpg" class="d-block w-100 review_img" alt="오페라 케이크">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="imgs/food_imgs/음식 (8).jpg" class="d-block w-100 review_img" alt="안심 스테이크">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="imgs/food_imgs/음식 (9).jpg" class="d-block w-100 review_img" alt="연어 카르파초">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <!-- 좋아요 -->
+                <div class="review_actions">
+                    <button class="rev_like_btn" id="revLikeBtn" onclick="toggleRevLike(this)">❤️ <span id="revLikeCount">0</span></button>
+                </div>
+            </div>
+
+            <!-- 오른쪽: 댓글 -->
+            <div class="review_comment_wrap">
+                <div class="rev_cmt_title">💬 댓글</div>
+                <div class="rev_cmt_list" id="revCmtList"><p class="rev_cmt_empty">첫 댓글을 남겨보세요!</p></div>
+                <div class="rev_cmt_input_area" id="revCmtInputArea"></div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-outline-light px-4" onclick="location.href='exam01.html'">← 홈으로</button>
+        </div>
+    </div>
+
+    <script>
+
+        function getUser() { return sessionStorage.getItem('isLoggedIn')==='true' ? sessionStorage.getItem('userName') : null; }
+        function getCardData() { return JSON.parse(localStorage.getItem('csm_card_data') || '{"likes":{},"comments":{}}'); }
+        function saveCardData(d) { localStorage.setItem('csm_card_data', JSON.stringify(d)); }
+
+        // 슬라이드 인덱스 → card id 매핑
+        const slideMap = { 0:1, 1:2, 2:3, 3:4 };
+        let currentCardId = 1;
+
+        function getCurrentCardId() {
+            const active = document.querySelector('#carouselExampleIndicators .carousel-item.active');
+            const items = document.querySelectorAll('#carouselExampleIndicators .carousel-item');
+            let idx = 0;
+            items.forEach((el, i) => { if (el === active) idx = i; });
+            return slideMap[idx] || 1;
+        }
+
+        function initReview() {
+            // URL 파라미터에서 슬라이드 번호 읽기 (?slide=2 이런식)
+            const params = new URLSearchParams(window.location.search);
+            const slideNum = parseInt(params.get('slide') || '1') - 1;
+            if (slideNum > 0) {
+                const carousel = new bootstrap.Carousel(document.getElementById('carouselExampleIndicators'));
+                carousel.to(slideNum);
+            }
+            setTimeout(updatePanel, 100);
+            // 슬라이드 변경 시 패널 업데이트
+            document.getElementById('carouselExampleIndicators').addEventListener('slid.bs.carousel', function() {
+                updatePanel();
+            });
+        }
+
+        function updatePanel() {
+            currentCardId = getCurrentCardId();
+            const d = getCardData();
+            const user = getUser();
+            const likes = d.likes[currentCardId] || [];
+            const cmts = d.comments[currentCardId] || [];
+
+            // 좋아요
+            const likeBtn = document.getElementById('revLikeBtn');
+            document.getElementById('revLikeCount').textContent = likes.length;
+            if (user && likes.includes(user)) likeBtn.classList.add('liked');
+            else likeBtn.classList.remove('liked');
+
+            // 댓글
+            renderRevCmts(cmts);
+
+            // 입력창
+            const area = document.getElementById('revCmtInputArea');
+            if (user) {
+                area.innerHTML = `<div class="rev_cmt_input_wrap"><input class="rev_cmt_input" id="revCmtInput" placeholder="댓글 입력..." onkeydown="if(event.key==='Enter')submitRevCmt()"><button class="rev_cmt_submit" onclick="submitRevCmt()">등록</button></div>`;
+            } else {
+                area.innerHTML = '<p class="rev_no_login">로그인 후 댓글을 달 수 있어요</p>';
+            }
+        }
+
+        function renderRevCmts(cmts) {
+            const list = document.getElementById('revCmtList');
+            if (!cmts || cmts.length === 0) { list.innerHTML = '<p class="rev_cmt_empty">첫 댓글을 남겨보세요!</p>'; return; }
+            list.innerHTML = cmts.map(c => `<div class="rev_cmt_item"><span class="rev_cmt_author">${c.author}</span><span class="rev_cmt_text">${c.text}</span><span class="rev_cmt_time">${c.time}</span></div>`).join('');
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function toggleRevLike(btn) {
+            const user = getUser();
+            if (!user) { alert('로그인 후 좋아요를 누를 수 있어요!'); return; }
+            const d = getCardData();
+            if (!d.likes[currentCardId]) d.likes[currentCardId] = [];
+            if (d.likes[currentCardId].includes(user)) {
+                d.likes[currentCardId] = d.likes[currentCardId].filter(u => u !== user);
+                btn.classList.remove('liked');
+            } else {
+                d.likes[currentCardId].push(user);
+                btn.classList.add('liked');
+            }
+            document.getElementById('revLikeCount').textContent = d.likes[currentCardId].length;
+            saveCardData(d);
+        }
+
+        function submitRevCmt() {
+            const user = getUser();
+            if (!user) { alert('로그인 후 댓글을 달 수 있어요!'); return; }
+            const input = document.getElementById('revCmtInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const d = getCardData();
+            if (!d.comments[currentCardId]) d.comments[currentCardId] = [];
+            const now = new Date();
+            const time = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+            d.comments[currentCardId].push({ author: user, text, time });
+            saveCardData(d);
+            renderRevCmts(d.comments[currentCardId]);
+            input.value = '';
+            // 홈 카드 댓글 수도 sync
+            const cc = document.getElementById('cc_'+currentCardId);
+            if (cc) cc.textContent = d.comments[currentCardId].length;
+        }
+
+        function toggleNav() {
+            document.getElementById('sideNav').classList.toggle('nav_hidden');
+        }
+    </script>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById("loginBtn");
+            if (!btn) return;
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                btn.textContent = "로그아웃";
+                btn.classList.add("logged");
+            }
+            initReview();
+        });
+
+        function handleLoginClick() {
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                sessionStorage.removeItem("isLoggedIn");
+                sessionStorage.removeItem("userName");
+                location.reload();
+            } else {
+                location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>
