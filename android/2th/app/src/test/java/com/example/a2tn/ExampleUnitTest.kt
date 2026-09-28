@@ -20,10 +20,10 @@ class ExampleUnitTest {
 
         println("코틀린: 불변 변수 val 나의 이름은 $myName, 나의 나이 : $age")
         /*시험에 나올 수 있음 */
-        var numOne = 1                
+        var numOne = 1
         var numTwo = 3000000000
-        var myByte : Byte = 1 
-        var myInt : Int = 20
+        var myByte: Byte = 1
+        var myInt: Int = 20
         var myLong = 25L
 
         println("numone : $numOne\n numtwo : $numTwo\n mybyte : $myByte\n mtint : $myInt\n mylong $myLong\n")
@@ -34,7 +34,7 @@ class ExampleUnitTest {
         println("코틀린 : 실수 자료형, Float : $myFloat")
         println("코틀린 : 실수 자료형, Double : $myDouble")
 
-        var myBoolean : Boolean = true
+        var myBoolean: Boolean = true
         println("코틀린 : 부울린 자료형, Boolean : $myBoolean\n")
 
         var myChar1: Char = 'K'
@@ -47,13 +47,13 @@ class ExampleUnitTest {
         println("코틀린 : 문자 자료형, Char : $myChar1$myChar2$myChar3$myChar4$myChar5$myChar6\n")
 
 
-        var myString1 : String = "Kotlin\n"
-        var myString2 : String = "Java"
+        var myString1: String = "Kotlin\n"
+        var myString2: String = "Java"
 
         println("String : $myString1")
         println("String : $myString2")
 
-        var myArray : IntArray = intArrayOf(1,2,3,4,5)
+        var myArray: IntArray = intArrayOf(1, 2, 3, 4, 5)
         println("배열의3번째 값 : " + myArray[2])
 
         var myX: Int = 100
@@ -63,29 +63,29 @@ class ExampleUnitTest {
         println("코틀린 : 자료형 변환 Float : $myY")
 
 
-        var x : Int = 5
-        var y : Int = 10
-        println("코틀린 : 산술 연산자 x + y = " + (x+y))
-        println("코틀린 : 산술 연산자 x - y = " + (x-y))
-        println("코틀린 : 산술 연산자 x / y = " + (x/y))
-        println("코틀린 : 산술 연산자 x * y = " + (x*y))
-        println("코틀린 : 산술 연산자 x % y = " + (x%y))
-        println("코틀린 : 비교 연산자 x > y = " + (x>y))
-        println("코틀린 : 비교 연산자 x < y = " + (x<y))
+        var x: Int = 5
+        var y: Int = 10
+        println("코틀린 : 산술 연산자 x + y = " + (x + y))
+        println("코틀린 : 산술 연산자 x - y = " + (x - y))
+        println("코틀린 : 산술 연산자 x / y = " + (x / y))
+        println("코틀린 : 산술 연산자 x * y = " + (x * y))
+        println("코틀린 : 산술 연산자 x % y = " + (x % y))
+        println("코틀린 : 비교 연산자 x > y = " + (x > y))
+        println("코틀린 : 비교 연산자 x < y = " + (x < y))
 
-        println("코틀린 : 비교 연산자 x >= y = " + (x>=y))
-        println("코틀린 : 비교 연산자 x <= y = " + (x<=y))
-        println("코틀린 : 비교 연산자 x == y = " + (x==y))
-        println("코틀린 : 비교 연산자 x != y = " + (x!=y))
-        y+= x
+        println("코틀린 : 비교 연산자 x >= y = " + (x >= y))
+        println("코틀린 : 비교 연산자 x <= y = " + (x <= y))
+        println("코틀린 : 비교 연산자 x == y = " + (x == y))
+        println("코틀린 : 비교 연산자 x != y = " + (x != y))
+        y += x
         println("코틀린 : 할당 연산자 x += y => y =" + (y))
-        y-=x
+        y -= x
         println("코틀린 : 할당 연산자 x -= y =>  y = " + (y))
-        y*=x
+        y *= x
         println("코틀린 : 할당 연산자 x *= y =>  y = " + (y))
-        y/=x
+        y /= x
         println("코틀린 : 할당 연산자 x /= y =>  y = " + (y))
-        y%=x
+        y %= x
         println("코틀린 : 할당 연산자 x %= y =>  y = " + (y))
 
         println("코틀린 : 증감 연산자 ++x = = " + (++x))
@@ -115,14 +115,14 @@ class ExampleUnitTest {
         var num2: Int = 10
         var result1: String
 
-        if (num2 > 0){
-            if(num2 % 2 ==0 ){
+        if (num2 > 0) {
+            if (num2 % 2 == 0) {
                 result1 = "숫자" + num2 + "은 양수이고 짝수"
-            }else{
+            } else {
                 result1 = "숫자" + num2 + "은 양수이고 홀수"
             }
-        }else{
-            if (num2 % 2==0){
+        } else {
+            if (num2 % 2 == 0) {
                 result1 = "숫자" + num2 + "은 음수이고 짝수"
             } else {
                 result1 = "숫자" + num2 + "은 음수이고 홀수"
@@ -130,8 +130,8 @@ class ExampleUnitTest {
         }
         println("코틀린 : 중첩 if 조건문 $result1")
 
-        var day : Int = 2
-        var result2 : String
+        var day: Int = 2
+        var result2: String
         when (day) {
             1 -> result2 = "Monday"
             2 -> result2 = "Tuesday"
@@ -144,15 +144,15 @@ class ExampleUnitTest {
         }
         println("코틀린 : when 조건문 $result2")
 
-        for(i in 5 downTo 1 ){
+        for (i in 5 downTo 1) {
             println("코틀린 : for 반복문 반복변수 : $i")
         }
-        for(i in 5 downTo 1 step 2){
+        for (i in 5 downTo 1 step 2) {
             println("코틀린 : for 반복문 반복변수 : $i")
         }
-        var numbers = arrayOf(1,2,3,4,5)
-        for (i in numbers){
-            if (i % 2 == 1){
+        var numbers = arrayOf(1, 2, 3, 4, 5)
+        for (i in numbers) {
+            if (i % 2 == 1) {
                 println("코틀린 : for 반복문 반복변수 : $i")
             }
         }
@@ -179,6 +179,18 @@ class ExampleUnitTest {
         println("출석률: $attendance%")
         println("결과: $result3")
 
+
+
+            for (i in 10..13) {
+                for (j in 1..9) {
+                    print("${i}x${j}=${i * j} ")
+                }
+                println()
+            }
+
+
+
     }
+
 
 }
