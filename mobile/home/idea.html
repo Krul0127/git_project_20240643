@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>아이디어 - ChoSungmin</title>
+    <link rel="icon" type="image/svg+xml" href="imgs/favicon.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -49,6 +50,15 @@
         .idea_delete_btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #666; font-size: 1rem; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
         .idea_delete_btn:hover { color: #e74c3c; background-color: rgba(231,76,60,0.1); }
 
+        /* 포트폴리오 참고 사이트 */
+        .ref_title { color: #fff; font-size: 1.1rem; margin: 40px 0 6px; }
+        .ref_sub { color: #777; font-size: 0.85rem; margin-bottom: 16px; }
+        .ref_card { display: block; background-color: #1c1c1c; border: 1px solid #2a2a2a; border-left: 4px solid #e67e22; border-radius: 10px; padding: 16px 18px; height: 100%; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .ref_card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+        .ref_card h3 { color: #fff; font-size: 1rem; font-weight: bold; margin-bottom: 4px; }
+        .ref_url { color: #e67e22; font-size: 0.78rem; margin-bottom: 8px; display: block; }
+        .ref_card p { color: #aaa; font-size: 0.85rem; line-height: 1.6; margin-bottom: 0; }
+
         .idea_empty { color: #666; font-size: 0.9rem; padding: 24px 0; text-align: center; display: none; }
         .idea_empty.show { display: block; }
 
@@ -68,7 +78,7 @@
         <div class="header_wrap">
             <h1 class="header_start">
                 <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
-                <span class="header_title" onclick="location.href='index.html'">ChoSungmin</span>
+                <span class="header_title" onclick="location.href='exam01.html'">ChoSungmin</span>
             </h1>
             <div class="header_center">
                 <form class="header_form" onsubmit="return false">
@@ -86,16 +96,16 @@
     <nav id="sideNav">
         <ul class="nav_wrapper">
             <li>
-                <button class="nav_icon">🍽️</button>
-                <button class="nav_menu" onclick="location.href='index.html'">홈</button>
+                <button class="nav_icon">🏠</button>
+                <button class="nav_menu" onclick="location.href='exam01.html'">홈</button>
             </li>
             <li>
-                <button class="nav_icon">🎠</button>
-                <button class="nav_menu" onclick="location.href='csm_review.html'">CSM 리뷰</button>
+                <button class="nav_icon">💼</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#projects'">프로젝트</button>
             </li>
             <li>
-                <button class="nav_icon">🖼️</button>
-                <button class="nav_menu" onclick="location.href='gallery.html'">갤러리</button>
+                <button class="nav_icon">🏅</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#certs'">자격증</button>
             </li>
             <li>
                 <button class="nav_icon">💡</button>
@@ -119,6 +129,33 @@
 
         <div class="row g-3" id="ideaGrid"></div>
         <p class="idea_empty" id="ideaEmpty">아직 등록된 아이디어가 없어요. 위 입력창에 적어보세요!</p>
+
+        <!-- 포트폴리오 참고 사이트 -->
+        <h2 class="ref_title">📚 포트폴리오 참고 사이트</h2>
+        <p class="ref_sub">디자인과 구성을 참고할 만한 사이트예요. 클릭하면 새 탭에서 열려요.</p>
+        <div class="row g-3">
+            <div class="col-lg-4 col-md-6 col-12">
+                <a class="ref_card" href="https://brittanychiang.com" target="_blank" rel="noopener noreferrer">
+                    <h3>Brittany Chiang</h3>
+                    <span class="ref_url">brittanychiang.com</span>
+                    <p>개발자 포트폴리오의 교과서 같은 사이트. 다크 테마, 왼쪽 고정 소개 + 오른쪽 경력·프로젝트 스크롤 구성을 참고하기 좋아요.</p>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <a class="ref_card" href="https://bruno-simon.com" target="_blank" rel="noopener noreferrer">
+                    <h3>Bruno Simon</h3>
+                    <span class="ref_url">bruno-simon.com</span>
+                    <p>자동차를 운전하며 둘러보는 3D 포트폴리오. "이렇게까지 할 수 있구나" 싶은 창의적인 아이디어를 얻기 좋아요.</p>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <a class="ref_card" href="https://www.awwwards.com/websites/portfolio/" target="_blank" rel="noopener noreferrer">
+                    <h3>Awwwards 포트폴리오 모음</h3>
+                    <span class="ref_url">awwwards.com</span>
+                    <p>전 세계 디자이너·개발자 포트폴리오 중 수상작을 모아 둔 곳. 레이아웃, 색 조합, 애니메이션 아이디어를 한 번에 볼 수 있어요.</p>
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -128,6 +165,15 @@
 
         const IDEA_STORAGE_KEY = 'csm_ideas';
         const DEFAULT_IDEAS = [
+            '📱 코틀린으로 할 일 목록(To-Do) 안드로이드 앱 만들어 보기',
+            '🗺️ 카카오 지도 API로 학교 주변 장소를 소개하는 앱 만들기',
+            '🌗 포트폴리오에 다크/라이트 테마 전환 버튼 추가하기',
+            '🖼️ 프로젝트마다 실행 화면 스크린샷을 카드에 넣기',
+            '🚀 GitHub Pages로 포트폴리오를 배포해서 링크로 공유하기',
+            '📝 수업에서 배운 내용을 주차별로 정리하는 학습 기록 페이지 만들기'
+        ];
+        // 예전(맛집 사이트) 기본 아이디어 — 저장된 목록에 남아 있으면 새 기본 아이디어로 교체
+        const OLD_DEFAULT_IDEAS = [
             '🗺️ 리뷰한 맛집을 지도 위에 표시해서 위치를 한눈에 볼 수 있게 하기',
             '⭐ 마음에 드는 맛집을 즐겨찾기에 저장하고 따로 모아보는 기능',
             '🏷️ 한식, 양식, 디저트 등 음식 종류별로 리뷰를 분류하는 기능',
@@ -144,7 +190,13 @@
                     localStorage.setItem(IDEA_STORAGE_KEY, JSON.stringify(seeded));
                     return seeded;
                 }
-                return JSON.parse(raw);
+                let ideas = JSON.parse(raw);
+                if (ideas.some(idea => OLD_DEFAULT_IDEAS.includes(idea.text))) {
+                    ideas = ideas.filter(idea => !OLD_DEFAULT_IDEAS.includes(idea.text))
+                        .concat(DEFAULT_IDEAS.map(text => ({ id: Date.now() + Math.random(), text })));
+                    localStorage.setItem(IDEA_STORAGE_KEY, JSON.stringify(ideas));
+                }
+                return ideas;
             } catch (e) {
                 return [];
             }
