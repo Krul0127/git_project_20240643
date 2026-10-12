@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dropdown.css">
     <style>
         body { background-color: #111; color: #eee; min-height: 100vh; }
 
@@ -78,12 +79,12 @@
         <div class="header_wrap">
             <h1 class="header_start">
                 <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
-                <span class="header_title" onclick="location.href='exam01.html'">ChoSungmin</span>
+                <span class="header_title" onclick="location.href='exam01.html'" data-swap="조성민">ChoSungmin</span>
             </h1>
             <div class="header_center">
                 <form class="header_form" onsubmit="return false">
-                    <input class="header_text_input" placeholder="검색하고 싶은 단어 입력">
-                    <button class="header_input_button" type="submit">검색</button>
+                    <input class="header_text_input" data-swap-placeholder="Type a keyword to search" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="submit" data-swap="Search">검색</button>
                 </form>
             </div>
             <div class="header_end">
@@ -97,41 +98,45 @@
         <ul class="nav_wrapper">
             <li>
                 <button class="nav_icon">🏠</button>
-                <button class="nav_menu" onclick="location.href='exam01.html'">홈</button>
+                <button class="nav_menu" onclick="location.href='exam01.html'" data-swap="Home">홈</button>
             </li>
             <li>
                 <button class="nav_icon">💼</button>
-                <button class="nav_menu" onclick="location.href='exam01.html#projects'">프로젝트</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#projects'" data-swap="Projects">프로젝트</button>
             </li>
             <li>
                 <button class="nav_icon">🏅</button>
-                <button class="nav_menu" onclick="location.href='exam01.html#certs'">자격증</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#certs'" data-swap="Certificates">자격증</button>
+            </li>
+            <li>
+                <button class="nav_icon">📋</button>
+                <button class="nav_menu" onclick="location.href='board.html'" data-swap="Board">게시판</button>
             </li>
             <li>
                 <button class="nav_icon">💡</button>
-                <button class="nav_menu active" onclick="location.href='idea.html'">아이디어</button>
+                <button class="nav_menu active" onclick="location.href='idea.html'" data-swap="Ideas">아이디어</button>
             </li>
             <li>
                 <button class="nav_icon">👤</button>
-                <button class="nav_menu" onclick="location.href='profile.html'">자기소개</button>
+                <button class="nav_menu" onclick="location.href='profile.html'" data-swap="About Me">자기소개</button>
             </li>
         </ul>
     </nav>
 
     <div class="idea_section">
-        <h1>💡 생각난 아이디어</h1>
+        <h1 data-swap="💡 My Ideas">💡 생각난 아이디어</h1>
 
         <form class="idea_form" onsubmit="return false">
-            <input class="idea_input" id="ideaInput" placeholder="생각난 아이디어를 적어보세요"
+            <input class="idea_input" id="ideaInput" data-swap-placeholder="Write down your idea" placeholder="생각난 아이디어를 적어보세요"
                 maxlength="200" onkeydown="if(event.key==='Enter'){addIdea();}">
-            <button class="idea_add_btn" type="button" onclick="addIdea()">추가</button>
+            <button class="idea_add_btn" type="button" onclick="addIdea()" data-swap="Add">추가</button>
         </form>
 
         <div class="row g-3" id="ideaGrid"></div>
         <p class="idea_empty" id="ideaEmpty">아직 등록된 아이디어가 없어요. 위 입력창에 적어보세요!</p>
 
         <!-- 포트폴리오 참고 사이트 -->
-        <h2 class="ref_title">📚 포트폴리오 참고 사이트</h2>
+        <h2 class="ref_title" data-swap="📚 Portfolio References">📚 포트폴리오 참고 사이트</h2>
         <p class="ref_sub">디자인과 구성을 참고할 만한 사이트예요. 클릭하면 새 탭에서 열려요.</p>
         <div class="row g-3">
             <div class="col-lg-4 col-md-6 col-12">
@@ -256,5 +261,7 @@
         renderIdeas();
     </script>
 
+    <script src="js/dropdown.js"></script>
+    <script src="js/hover.js"></script>
 </body>
 </html>

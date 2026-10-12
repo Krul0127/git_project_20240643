@@ -1,0 +1,96 @@
+/* ===== 헤더 오른쪽 프로필 드롭다운 메뉴 (js/dropdown.js) ===== */
+/* 동그라미 로고 이미지 대신: [사람 아이콘 + 메뉴(아이디) + ▾] 둥근 버튼 */
+.header_profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    height: 36px;
+    align-self: center;
+    padding: 0 12px 0 10px;
+    background-image: none;
+    border: 1px solid #444;
+    border-radius: 18px;
+    color: #ddd;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+}
+/* 메뉴가 열리면(마우스를 올리면) 주황색으로 */
+.header_profile.open {
+    border-color: #e67e22;
+    color: #e67e22;
+    background-color: #1f1a15;
+}
+.profile_icon { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+.profile_label { max-width: 90px; overflow: hidden; text-overflow: ellipsis; }
+/* 메뉴가 있다는 표시 ▾ */
+.header_profile::after {
+    content: '▾';
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+}
+.header_profile.open::after { transform: rotate(180deg); }
+
+/* 좁은 화면에서는 글자 빼고 아이콘 + ▾ 만 */
+@media screen and (max-width: 400px) {
+    .profile_label { display: none; }
+    .header_profile { padding: 0 10px; }
+}
+
+.dropdown_menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    padding: 6px;
+    background-color: #1c1c1c;
+    border: 1px solid #2e2e2e;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    cursor: default;
+    z-index: 30;
+    /* 닫힌 상태: 투명하게 숨김 */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+}
+/* 열린 상태 */
+.dropdown_menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+/* 프로필과 메뉴 사이 빈틈: 마우스가 지나가도 메뉴가 닫히지 않게 */
+.dropdown_menu::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 0;
+    right: 0;
+    height: 12px;
+}
+
+.dropdown_head {
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #2a2a2a;
+    color: #888;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+.dropdown_head b { display: block; color: #fff; font-size: 0.95rem; }
+
+.dropdown_item {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 6px;
+    color: #ccc;
+    font-size: 0.88rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.dropdown_divider { height: 1px; margin: 4px 0; background-color: #2a2a2a; }

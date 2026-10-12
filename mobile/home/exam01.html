@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dropdown.css">
     <style>
         html { scroll-behavior: smooth; scroll-padding-top: 70px; }
         body { background-color: #111; color: #eee; min-height: 100vh; }
@@ -141,18 +142,18 @@
         <div class="header_wrap">
             <h1 class="header_start">
                 <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
-                <span class="header_title" onclick="location.href='exam01.html'">ChoSungmin</span>
+                <span class="header_title" onclick="location.href='exam01.html'" data-swap="조성민">ChoSungmin</span>
             </h1>
             <div class="header_center">
                 <form class="header_form" onsubmit="return false">
-                    <input class="header_text_input" id="searchInput"
+                    <input class="header_text_input" data-swap-placeholder="Search projects &amp; skills (e.g. Kotlin)" id="searchInput"
                         placeholder="프로젝트·기술 검색 (예: 코틀린)"
                         oninput="searchCards()">
-                    <button class="header_input_button" type="button" onclick="searchCards(true)">검색</button>
+                    <button class="header_input_button" type="button" onclick="searchCards(true)" data-swap="Search">검색</button>
                 </form>
             </div>
             <div class="header_end">
-                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn">로그인</button>
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn" data-swap="auto">로그인</button>
                 <button class="header_search" aria-label="검색"
                     onclick="document.getElementById('searchInput').focus()">&#128269;</button>
                 <div class="header_profile"></div>
@@ -164,23 +165,27 @@
         <ul class="nav_wrapper">
             <li>
                 <button class="nav_icon">🏠</button>
-                <button class="nav_menu active" onclick="location.href='exam01.html'">홈</button>
+                <button class="nav_menu active" onclick="location.href='exam01.html'" data-swap="Home">홈</button>
             </li>
             <li>
                 <button class="nav_icon">💼</button>
-                <button class="nav_menu" onclick="location.href='exam01.html#projects'">프로젝트</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#projects'" data-swap="Projects">프로젝트</button>
             </li>
             <li>
                 <button class="nav_icon">🏅</button>
-                <button class="nav_menu" onclick="location.href='exam01.html#certs'">자격증</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#certs'" data-swap="Certificates">자격증</button>
+            </li>
+            <li>
+                <button class="nav_icon">📋</button>
+                <button class="nav_menu" onclick="location.href='board.html'" data-swap="Board">게시판</button>
             </li>
             <li>
                 <button class="nav_icon">💡</button>
-                <button class="nav_menu" onclick="location.href='idea.html'">아이디어</button>
+                <button class="nav_menu" onclick="location.href='idea.html'" data-swap="Ideas">아이디어</button>
             </li>
             <li>
                 <button class="nav_icon">👤</button>
-                <button class="nav_menu" onclick="location.href='profile.html'">자기소개</button>
+                <button class="nav_menu" onclick="location.href='profile.html'" data-swap="About Me">자기소개</button>
             </li>
         </ul>
     </nav>
@@ -196,16 +201,16 @@
                 <p>HTML/CSS로 반응형 웹 화면을 만들고, 코틀린으로 안드로이드 앱 개발을 배우고 있습니다.<br>
                    수업에서 만든 결과물을 하나씩 정리해 둔 포트폴리오입니다.</p>
                 <div class="hero_btns">
-                    <a class="btn btn-sm btn_main px-3" href="#projects">💼 프로젝트 보기</a>
-                    <a class="btn btn-sm btn-outline-light px-3" href="profile.html">👤 자기소개</a>
-                    <a class="btn btn-sm btn-outline-light px-3" href="https://github.com/Krul0127" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
+                    <a class="btn btn-sm btn_main px-3" href="#projects" data-swap="💼 View Projects">💼 프로젝트 보기</a>
+                    <a class="btn btn-sm btn-outline-light px-3" href="profile.html" data-swap="👤 About Me">👤 자기소개</a>
+                    <a class="btn btn-sm btn-outline-light px-3" href="https://github.com/Krul0127" target="_blank" rel="noopener noreferrer" data-swap="🐙 깃허브">🐙 GitHub</a>
                 </div>
             </div>
         </section>
 
         <!-- 배경음악 -->
         <section class="section">
-            <p class="section_title">🎵 오늘의 배경음악</p>
+            <p class="section_title"><span data-swap="🎵 Today's BGM">🎵 오늘의 배경음악</span></p>
             <div class="music_wrapper">
                 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2SkMxaKIvMvKDNoDIzZs1r?utm_source=generator&theme=0"
                     width="100%" height="152" frameborder="0" allowfullscreen
@@ -215,11 +220,11 @@
 
         <!-- 기술 스택 -->
         <section class="section" id="skills">
-            <p class="section_title">🛠️ 기술 스택</p>
+            <p class="section_title"><span data-swap="🛠️ Tech Stack">🛠️ 기술 스택</span></p>
             <div class="row g-3">
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="skill_card">
-                        <h3>🌐 웹</h3>
+                        <h3 data-swap="🌐 Web">🌐 웹</h3>
                         <div class="skill_tags">
                             <span class="skill_tag">HTML5</span>
                             <span class="skill_tag">CSS3</span>
@@ -231,7 +236,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="skill_card">
-                        <h3>📱 모바일</h3>
+                        <h3 data-swap="📱 Mobile">📱 모바일</h3>
                         <div class="skill_tags">
                             <span class="skill_tag">Kotlin</span>
                             <span class="skill_tag">Android Studio</span>
@@ -241,7 +246,7 @@
                 </div>
                 <div class="col-lg-4 col-md-12 col-12">
                     <div class="skill_card">
-                        <h3>🧰 도구 · API</h3>
+                        <h3 data-swap="🧰 Tools · API">🧰 도구 · API</h3>
                         <div class="skill_tags">
                             <span class="skill_tag">Git</span>
                             <span class="skill_tag">GitHub</span>
@@ -256,7 +261,7 @@
 
         <!-- 프로젝트 (data-name: 검색 키워드) -->
         <section class="section" id="projects">
-            <p class="section_title">💼 프로젝트 <span style="color:#555; letter-spacing:0;">· GitHub에 올리면 자동으로 추가돼요</span></p>
+            <p class="section_title"><span data-swap="💼 Projects">💼 프로젝트</span> <span style="color:#555; letter-spacing:0;">· GitHub에 올리면 자동으로 추가돼요</span></p>
             <!-- GitHub 저장소의 mobile/*, android/* 폴더를 읽어서 자동으로 카드 생성 (아래 loadProjects) -->
             <div class="row g-3" id="cardGrid">
                 <p class="commit_status">GitHub에서 프로젝트를 불러오는 중...</p>
@@ -268,35 +273,35 @@
 
         <!-- 최근 GitHub 활동: 저장소에 커밋하면 자동으로 표시 -->
         <section class="section" id="activity">
-            <p class="section_title">📡 최근 GitHub 활동</p>
+            <p class="section_title"><span data-swap="📡 Recent GitHub Activity">📡 최근 GitHub 활동</span></p>
             <div class="commit_list" id="commitList">
                 <p class="commit_status">GitHub에서 불러오는 중...</p>
             </div>
-            <a class="commit_more" href="https://github.com/Krul0127/git_project_20240643/commits" target="_blank" rel="noopener noreferrer">전체 기록 보기 →</a>
+            <a class="commit_more" href="https://github.com/Krul0127/git_project_20240643/commits" target="_blank" rel="noopener noreferrer" data-swap="View all commits →">전체 기록 보기 →</a>
         </section>
 
         <!-- 자격증 -->
         <section class="section" id="certs">
-            <p class="section_title">🏅 자격증</p>
+            <p class="section_title"><span data-swap="🏅 Certificates">🏅 자격증</span></p>
             <div class="row g-3">
-                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong>정보처리기능사</strong><span>한국산업인력공단</span></div></div>
-                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong>통신선로기능사</strong><span>한국산업인력공단</span></div></div>
-                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong>컴퓨터활용능력 2급</strong><span>대한상공회의소</span></div></div>
-                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong>워드프로세서 2급</strong><span>대한상공회의소</span></div></div>
-                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong>ITQ</strong><span>한국생산성본부</span></div></div>
+                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong data-swap="Craftsman Information Processing">정보처리기능사</strong><span>한국산업인력공단</span></div></div>
+                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong data-swap="Craftsman Telecommunication Line">통신선로기능사</strong><span>한국산업인력공단</span></div></div>
+                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong data-swap="Computer Specialist Lv.2">컴퓨터활용능력 2급</strong><span>대한상공회의소</span></div></div>
+                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong data-swap="Word Processor Lv.2">워드프로세서 2급</strong><span>대한상공회의소</span></div></div>
+                <div class="col-lg-4 col-md-6 col-12"><div class="cert_item"><strong data-swap="정보기술자격">ITQ</strong><span>한국생산성본부</span></div></div>
             </div>
         </section>
 
         <!-- 연락처 -->
         <section class="section" id="contact">
-            <p class="section_title">📬 연락처</p>
+            <p class="section_title"><span data-swap="📬 Contact">📬 연락처</span></p>
             <div class="contact_box">
                 <p>함께 이야기 나누고 싶다면 언제든 연락 주세요!</p>
                 <div class="contact_links">
-                    <a class="btn btn-sm btn_main px-3" href="mailto:whtjdals0434@gmail.com">📧 이메일</a>
-                    <a class="btn btn-sm btn-outline-light px-3" href="https://www.instagram.com/cho_sungmin_0127/" target="_blank" rel="noopener noreferrer">📷 인스타그램</a>
-                    <a class="btn btn-sm btn-outline-light px-3" href="https://github.com/Krul0127" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
-                    <a class="btn btn-sm btn-outline-light px-3" href="profile.html">👤 자세한 소개</a>
+                    <a class="btn btn-sm btn_main px-3" href="mailto:whtjdals0434@gmail.com" data-swap="📧 Email">📧 이메일</a>
+                    <a class="btn btn-sm btn-outline-light px-3" href="https://www.instagram.com/cho_sungmin_0127/" target="_blank" rel="noopener noreferrer" data-swap="📷 Instagram">📷 인스타그램</a>
+                    <a class="btn btn-sm btn-outline-light px-3" href="https://github.com/Krul0127" target="_blank" rel="noopener noreferrer" data-swap="🐙 깃허브">🐙 GitHub</a>
+                    <a class="btn btn-sm btn-outline-light px-3" href="profile.html" data-swap="👤 More About Me">👤 자세한 소개</a>
                 </div>
             </div>
         </section>
@@ -396,6 +401,7 @@
                 a.href = '../' + p.path.split('/')[1] + '/' + p.demo;   // mobile/home 기준 → mobile/폴더
                 a.target = '_blank';
                 a.textContent = '결과 보기';
+                a.setAttribute('data-swap', 'Demo');
                 links.appendChild(a);
             }
             const code = document.createElement('a');
@@ -404,6 +410,7 @@
             code.target = '_blank';
             code.rel = 'noopener noreferrer';
             code.textContent = '코드';
+            code.setAttribute('data-swap', 'Code');
             links.appendChild(code);
             return col;
         }
@@ -540,5 +547,7 @@
             }
         }
     </script>
+    <script src="js/dropdown.js"></script>
+    <script src="js/hover.js"></script>
 </body>
 </html>

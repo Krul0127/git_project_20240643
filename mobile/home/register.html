@@ -225,6 +225,15 @@
         }
         .id_check_msg.ok { color: #2ecc71; }
         .id_check_msg.fail { color: #e74c3c; }
+
+        /* 마우스 도움말 상자 */
+        .hint_box { background-color: #1a1a1a; border: 1px dashed #333; border-radius: 8px; padding: 10px 14px; font-size: 0.83rem; color: #777; margin-bottom: 16px; text-align: center; transition: all 0.2s; }
+        .step_circle { cursor: help; }
+
+        /* 비밀번호 보기 버튼 */
+        .pw_wrap { position: relative; }
+        .pw_wrap .login_input { padding-right: 44px; }
+        .pw_peek { position: absolute; right: 6px; top: 6px; width: 34px; height: 32px; background: none; border: none; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
 
@@ -241,19 +250,22 @@
     <div class="step_bar">
         <div class="step">
             <div class="step_circle active" id="step1_circle">1</div>
-            <div class="step_label active" id="step1_label">계정 정보</div>
+            <div class="step_label active" id="step1_label" data-swap="Account">계정 정보</div>
         </div>
         <div class="step_line" id="line1"></div>
         <div class="step">
             <div class="step_circle" id="step2_circle">2</div>
-            <div class="step_label" id="step2_label">개인 정보</div>
+            <div class="step_label" id="step2_label" data-swap="Profile">개인 정보</div>
         </div>
         <div class="step_line" id="line2"></div>
         <div class="step">
             <div class="step_circle" id="step3_circle">3</div>
-            <div class="step_label" id="step3_label">약관 동의</div>
+            <div class="step_label" id="step3_label" data-swap="Terms">약관 동의</div>
         </div>
     </div>
+
+    <!-- 마우스를 올리면 내용이 바뀌는 도움말 상자 -->
+    <div class="hint_box" id="hintBox"></div>
 
     <!-- 오류/성공 메시지 -->
     <div class="login_error" id="errorMsg"></div>
@@ -261,35 +273,41 @@
 
     <!-- ── 카드 1: 계정 정보 ── -->
     <div class="reg_card active" id="card1">
-        <div class="reg_card_title">🔑 계정 정보</div>
+        <div class="reg_card_title" data-swap="🔑 Account Info">🔑 계정 정보</div>
 
         <label class="login_label" for="regId">아이디 *</label>
         <div class="id_check_wrap">
-            <input class="login_input" type="text" id="regId" placeholder="영문, 숫자 4~12자" oninput="resetIdCheck()">
-            <button class="btn_id_check" type="button" onclick="checkDuplicate()">중복확인</button>
+            <input class="login_input" type="text" id="regId" placeholder="영문, 숫자 4~12자" data-swap-placeholder="4–12 letters or numbers" oninput="resetIdCheck()" data-hint="아이디는 영문·숫자 4~12자. 입력 후 꼭 [중복확인]을 눌러주세요.">
+            <button class="btn_id_check" type="button" onclick="checkDuplicate()" data-swap="auto">중복확인</button>
         </div>
         <div class="id_check_msg" id="idCheckMsg"></div>
 
         <label class="login_label" for="regPw">비밀번호 *</label>
-        <input class="login_input" type="password" id="regPw" placeholder="6자 이상">
+        <div class="pw_wrap">
+            <input class="login_input" type="password" id="regPw" placeholder="6자 이상" data-swap-placeholder="At least 6 characters" data-hint="비밀번호는 6자 이상. 오른쪽 👁 에 마우스를 올리면 잠깐 보여요.">
+            <button class="pw_peek" type="button" data-target="regPw" aria-label="비밀번호 보기">👁</button>
+        </div>
 
         <label class="login_label" for="regPwCheck">비밀번호 확인 *</label>
-        <input class="login_input" type="password" id="regPwCheck" placeholder="비밀번호 재입력">
+        <div class="pw_wrap">
+            <input class="login_input" type="password" id="regPwCheck" placeholder="비밀번호 재입력" data-swap-placeholder="Re-enter password" data-hint="위에 쓴 비밀번호를 한 번 더 똑같이 입력해주세요.">
+            <button class="pw_peek" type="button" data-target="regPwCheck" aria-label="비밀번호 확인 보기">👁</button>
+        </div>
 
         <div class="reg_btn_group">
-            <button class="btn_next" style="flex:1;" onclick="goStep(2)">다음 →</button>
+            <button class="btn_next" style="flex:1;" onclick="goStep(2)" data-swap="Next →">다음 →</button>
         </div>
     </div>
 
     <!-- ── 카드 2: 개인 정보 ── -->
     <div class="reg_card" id="card2">
-        <div class="reg_card_title">👤 개인 정보</div>
+        <div class="reg_card_title" data-swap="👤 Personal Info">👤 개인 정보</div>
 
         <label class="login_label" for="regName">이름 *</label>
-        <input class="login_input" type="text" id="regName" placeholder="실명 입력">
+        <input class="login_input" type="text" id="regName" placeholder="실명 입력" data-swap-placeholder="Your real name" data-hint="이름은 게시판 등에서 나를 알아보는 데 쓰여요.">
 
         <label class="login_label" for="regEmail">이메일 *</label>
-        <input class="login_input" type="email" id="regEmail" placeholder="example@email.com">
+        <input class="login_input" type="email" id="regEmail" placeholder="example@email.com" data-hint="이메일은 @가 들어간 형식으로 입력해주세요. (예: name@gmail.com)">
 
         <label class="login_label">성별</label>
         <div class="gender_group">
@@ -308,20 +326,20 @@
         </div>
 
         <div class="reg_btn_group">
-            <button class="btn_prev" onclick="goStep(1)">← 이전</button>
-            <button class="btn_next" onclick="goStep(3)">다음 →</button>
+            <button class="btn_prev" onclick="goStep(1)" data-swap="← Back">← 이전</button>
+            <button class="btn_next" onclick="goStep(3)" data-swap="Next →">다음 →</button>
         </div>
     </div>
 
     <!-- ── 카드 3: 약관 동의 ── -->
     <div class="reg_card" id="card3">
-        <div class="reg_card_title">📋 약관 동의</div>
+        <div class="reg_card_title" data-swap="📋 Terms of Service">📋 약관 동의</div>
 
         <div class="terms_box">
             <!-- 전체 동의 -->
             <div class="terms_all">
                 <input type="checkbox" id="agreeAll" onchange="toggleAll(this)">
-                <label class="terms_all_label" for="agreeAll">전체 동의</label>
+                <label class="terms_all_label" for="agreeAll" data-swap="Agree to all">전체 동의</label>
             </div>
 
             <!-- 이용약관 -->
@@ -348,16 +366,16 @@
         </div>
 
         <div class="reg_btn_group">
-            <button class="btn_prev" onclick="goStep(2)">← 이전</button>
-            <button class="btn_next" onclick="doRegister()">🎉 가입 완료</button>
+            <button class="btn_prev" onclick="goStep(2)" data-swap="← Back">← 이전</button>
+            <button class="btn_next" id="doneBtn" onclick="doRegister()">🎉 가입 완료</button>
         </div>
     </div>
 
     <div class="reg_footer">
-        <button onclick="location.href='login.html'">이미 계정이 있으신가요? 로그인</button>
+        <button onclick="location.href='login.html'" data-swap="Already have an account? Log in">이미 계정이 있으신가요? 로그인</button>
     </div>
     <div class="reg_footer" style="margin-top:6px;">
-        <button onclick="location.href='exam01.html'">← 홈으로 돌아가기</button>
+        <button onclick="location.href='exam01.html'" data-swap="← Back to Home">← 홈으로 돌아가기</button>
     </div>
 
 </div>
@@ -404,138 +422,8 @@
     </div>
 </div>
 
-<script>
-    let idChecked = false;
+<script src="js/register.js"></script>
 
-    function checkDuplicate() {
-        const id = document.getElementById('regId').value.trim();
-        const msg = document.getElementById('idCheckMsg');
-        const btn = document.querySelector('.btn_id_check');
-
-        if (!id || id.length < 4 || id.length > 12) {
-            msg.textContent = '아이디는 4~12자 영문/숫자로 입력해주세요.';
-            msg.className = 'id_check_msg fail';
-            return;
-        }
-
-        // localStorage에 저장된 아이디 목록과 비교 + 기본 admin 계정
-        const users = JSON.parse(localStorage.getItem('csm_users') || '[]');
-        const reserved = ['admin'];
-        const allIds = [...reserved, ...users.map(u => u.id)];
-
-        if (allIds.includes(id)) {
-            msg.textContent = '❌ 이미 사용 중인 아이디예요.';
-            msg.className = 'id_check_msg fail';
-            idChecked = false;
-            btn.classList.remove('confirmed');
-        } else {
-            msg.textContent = '✅ 사용 가능한 아이디예요.';
-            msg.className = 'id_check_msg ok';
-            idChecked = true;
-            btn.textContent = '확인완료';
-            btn.classList.add('confirmed');
-        }
-    }
-
-    function resetIdCheck() {
-        idChecked = false;
-        const btn = document.querySelector('.btn_id_check');
-        const msg = document.getElementById('idCheckMsg');
-        btn.textContent = '중복확인';
-        btn.classList.remove('confirmed');
-        msg.textContent = '';
-        msg.className = 'id_check_msg';
-    }
-    let currentStep = 1;
-
-    function goStep(step) {
-        const errorMsg = document.getElementById('errorMsg');
-        errorMsg.classList.remove('show');
-
-        // 유효성 검사
-        if (step > currentStep) {
-            if (currentStep === 1) {
-                const id = document.getElementById('regId').value.trim();
-                const pw = document.getElementById('regPw').value;
-                const pwCheck = document.getElementById('regPwCheck').value;
-                if (!id || id.length < 4 || id.length > 12) return showError('아이디는 4~12자로 입력해주세요.');
-                if (!idChecked) return showError('아이디 중복확인을 해주세요.');
-                if (!pw || pw.length < 6) return showError('비밀번호는 6자 이상 입력해주세요.');
-                if (pw !== pwCheck) return showError('비밀번호가 일치하지 않습니다.');
-            }
-            if (currentStep === 2) {
-                const name = document.getElementById('regName').value.trim();
-                const email = document.getElementById('regEmail').value.trim();
-                if (!name) return showError('이름을 입력해주세요.');
-                if (!email || !email.includes('@')) return showError('올바른 이메일을 입력해주세요.');
-            }
-        }
-
-        // 카드 전환
-        document.getElementById('card' + currentStep).classList.remove('active');
-        document.getElementById('card' + step).classList.add('active');
-
-        // 스텝 바 업데이트
-        updateStepBar(step);
-        currentStep = step;
-        window.scrollTo(0, 0);
-    }
-
-    function updateStepBar(step) {
-        for (let i = 1; i <= 3; i++) {
-            const circle = document.getElementById('step' + i + '_circle');
-            const label = document.getElementById('step' + i + '_label');
-            circle.classList.remove('active', 'done');
-            label.classList.remove('active');
-            if (i < step) { circle.classList.add('done'); circle.textContent = '✓'; }
-            else if (i === step) { circle.classList.add('active'); circle.textContent = i; label.classList.add('active'); }
-            else { circle.textContent = i; }
-        }
-        for (let i = 1; i <= 2; i++) {
-            const line = document.getElementById('line' + i);
-            line.classList.toggle('done', i < step);
-        }
-    }
-
-    function toggleAll(checkbox) {
-        document.getElementById('agreeTerms').checked = checkbox.checked;
-        document.getElementById('agreePrivacy').checked = checkbox.checked;
-    }
-
-    function checkAll() {
-        const terms = document.getElementById('agreeTerms').checked;
-        const privacy = document.getElementById('agreePrivacy').checked;
-        document.getElementById('agreeAll').checked = terms && privacy;
-    }
-
-    function doRegister() {
-        const agreeTerms = document.getElementById('agreeTerms').checked;
-        const agreePrivacy = document.getElementById('agreePrivacy').checked;
-        if (!agreeTerms || !agreePrivacy) return showError('필수 약관에 모두 동의해주세요.');
-
-        // localStorage에 회원 저장
-        const users = JSON.parse(localStorage.getItem('csm_users') || '[]');
-        users.push({
-            id: document.getElementById('regId').value.trim(),
-            pw: document.getElementById('regPw').value,
-            name: document.getElementById('regName').value.trim(),
-            email: document.getElementById('regEmail').value.trim()
-        });
-        localStorage.setItem('csm_users', JSON.stringify(users));
-
-        const successMsg = document.getElementById('successMsg');
-        successMsg.textContent = '🎉 회원가입 완료! 로그인 페이지로 이동합니다.';
-        successMsg.classList.add('show');
-        setTimeout(() => location.href = 'login.html', 2000);
-    }
-
-    function showError(msg) {
-        const errorMsg = document.getElementById('errorMsg');
-        errorMsg.textContent = msg;
-        errorMsg.classList.add('show');
-        window.scrollTo(0, 0);
-    }
-</script>
-
+    <script src="js/hover.js"></script>
 </body>
 </html>

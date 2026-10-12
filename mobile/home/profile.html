@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dropdown.css">
     <!-- 지도 (Leaflet + OpenStreetMap, API 키 불필요) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -80,16 +81,16 @@
         <div class="header_wrap">
             <h1 class="header_start">
                 <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
-                <span class="header_title" onclick="location.href='exam01.html'" style="cursor:pointer;">ChoSungmin</span>
+                <span class="header_title" onclick="location.href='exam01.html'" style="cursor:pointer;" data-swap="조성민">ChoSungmin</span>
             </h1>
             <div class="header_center">
                 <form class="header_form" onsubmit="return false">
-                    <input class="header_text_input" placeholder="검색하고 싶은 단어 입력">
-                    <button class="header_input_button" type="submit">검색</button>
+                    <input class="header_text_input" data-swap-placeholder="Type a keyword to search" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="submit" data-swap="Search">검색</button>
                 </form>
             </div>
             <div class="header_end">
-                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn">로그인</button>
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn" data-swap="auto">로그인</button>
                 <button class="header_search" aria-label="검색">&#128269;</button>
                 <div class="header_profile"></div>
             </div>
@@ -100,23 +101,27 @@
         <ul class="nav_wrapper">
             <li>
                 <button class="nav_icon">🏠</button>
-                <button class="nav_menu" onclick="location.href='exam01.html'">홈</button>
+                <button class="nav_menu" onclick="location.href='exam01.html'" data-swap="Home">홈</button>
             </li>
             <li>
                 <button class="nav_icon">💼</button>
-                <button class="nav_menu" onclick="location.href='exam01.html#projects'">프로젝트</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#projects'" data-swap="Projects">프로젝트</button>
             </li>
             <li>
                 <button class="nav_icon">🏅</button>
-                <button class="nav_menu" onclick="location.href='exam01.html#certs'">자격증</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#certs'" data-swap="Certificates">자격증</button>
+            </li>
+            <li>
+                <button class="nav_icon">📋</button>
+                <button class="nav_menu" onclick="location.href='board.html'" data-swap="Board">게시판</button>
             </li>
             <li>
                 <button class="nav_icon">💡</button>
-                <button class="nav_menu" onclick="location.href='idea.html'">아이디어</button>
+                <button class="nav_menu" onclick="location.href='idea.html'" data-swap="Ideas">아이디어</button>
             </li>
             <li>
                 <button class="nav_icon">👤</button>
-                <button class="nav_menu active" onclick="location.href='profile.html'">자기소개</button>
+                <button class="nav_menu active" onclick="location.href='profile.html'" data-swap="About Me">자기소개</button>
             </li>
         </ul>
     </nav>
@@ -136,7 +141,7 @@
                     </div>
 
                     <div class="col-12 col-md d-flex flex-column gap-3 text-center text-md-start align-items-center align-items-md-start">
-                        <h2 class="fw-bold fs-3 mb-0" style="color: #fff;">조성민</h2>
+                        <h2 class="fw-bold fs-3 mb-0" style="color: #fff;" data-swap="Cho Sungmin">조성민</h2>
                         <ul class="list-unstyled mb-0 d-flex flex-column gap-2 fs-6" style="color: #ccc;">
                             <li>📅 생년월일: 2000. 01. 27</li>
                             <li>📍 거주지: <a class="profile_link" href="#map" onclick="searchPlace('경기도 수원시 수성로157번길 60'); return false;">경기도 수원시 장안구 수성로 157번길 60</a></li>
@@ -148,18 +153,18 @@
                             <li style="color:#999; line-height:1.7;">안녕하세요 컴퓨터 공학과 3학년 조성민입니다.<br>
                                 보유 자격증: ITQ, 컴퓨터활용2급, 워드프로세서2급, 정보처리기능사, 통신선로기능사</li>
                         </ul>
-                        <button class="btn btn-outline-light px-4" onclick="location.href='exam01.html'">← 돌아가기</button>
+                        <button class="btn btn-outline-light px-4" onclick="location.href='exam01.html'" data-swap="← Back">← 돌아가기</button>
                     </div>
 
                 </div>
 
                 <!-- 현재 위치 지도 -->
                 <div class="mt-4">
-                    <h3 class="fs-5 fw-bold mb-2" style="color:#fff;">🗺️ 지도</h3>
+                    <h3 class="fs-5 fw-bold mb-2" style="color:#fff;" data-swap="🗺️ Map">🗺️ 지도</h3>
                     <form class="d-flex gap-2 mb-2" onsubmit="searchPlace(document.getElementById('mapSearch').value); return false;">
-                        <input id="mapSearch" class="form-control form-control-sm map_search_input" placeholder="주소나 장소 이름 입력 (예: 장안대학교)">
-                        <button class="btn btn-sm map_btn text-nowrap flex-shrink-0" type="submit">검색</button>
-                        <button class="btn btn-sm btn-outline-light text-nowrap flex-shrink-0" type="button" onclick="locateMe()">📍 현재 위치</button>
+                        <input id="mapSearch" data-swap-placeholder="Address or place (e.g. Jangan University)" class="form-control form-control-sm map_search_input" placeholder="주소나 장소 이름 입력 (예: 장안대학교)">
+                        <button class="btn btn-sm map_btn text-nowrap flex-shrink-0" type="submit" data-swap="Search">검색</button>
+                        <button class="btn btn-sm btn-outline-light text-nowrap flex-shrink-0" type="button" onclick="locateMe()" data-swap="📍 My Location">📍 현재 위치</button>
                     </form>
                     <p id="locationName" class="mb-2">위치를 불러오는 중...</p>
                     <div id="map"></div>
@@ -167,7 +172,7 @@
 
                 <!-- 좋아하는 노래 (스포티파이) -->
                 <div class="mt-4">
-                    <h3 class="fs-5 fw-bold mb-2" style="color:#fff;">🎵 좋아하는 노래</h3>
+                    <h3 class="fs-5 fw-bold mb-2" style="color:#fff;" data-swap="🎵 Favorite Song">🎵 좋아하는 노래</h3>
                     <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0G0FQEoNawD8i0LCrDMAl4?utm_source=generator&theme=0"
                         width="100%" height="152" frameborder="0" allowfullscreen
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
@@ -341,5 +346,7 @@
             }
         }
     </script>
+    <script src="js/dropdown.js"></script>
+    <script src="js/hover.js"></script>
 </body>
 </html>

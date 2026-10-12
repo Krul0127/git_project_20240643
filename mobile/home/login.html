@@ -125,28 +125,28 @@
     <div class="login_box">
         <div class="login_logo">
             <span onclick="location.href='exam01.html'">Cho<b>Sungmin</b></span>
-            <p>로그인 후 이용하세요</p>
+            <p data-swap="Please log in to continue">로그인 후 이용하세요</p>
         </div>
 
         <div class="login_error" id="loginError">
             아이디 또는 비밀번호가 틀렸습니다.
         </div>
 
-        <label class="login_label" for="userId">아이디</label>
-        <input class="login_input" type="text" id="userId" placeholder="아이디 입력"
+        <label class="login_label" for="userId" data-swap="ID">아이디</label>
+        <input class="login_input" type="text" id="userId" placeholder="아이디 입력" data-swap-placeholder="Enter your ID"
             onkeydown="if(event.key==='Enter') doLogin()">
 
-        <label class="login_label" for="userPw">비밀번호</label>
-        <input class="login_input" type="password" id="userPw" placeholder="비밀번호 입력"
+        <label class="login_label" for="userPw" data-swap="Password">비밀번호</label>
+        <input class="login_input" type="password" id="userPw" placeholder="비밀번호 입력" data-swap-placeholder="Enter your password"
             onkeydown="if(event.key==='Enter') doLogin()">
 
-        <button class="login_btn" onclick="doLogin()">로그인</button>
+        <button class="login_btn" onclick="doLogin()" data-swap="Login">로그인</button>
 
         <div class="login_back">
-            <button onclick="location.href='register.html'">계정이 없으신가요? 회원가입</button>
+            <button onclick="location.href='register.html'" data-swap="No account? Sign up">계정이 없으신가요? 회원가입</button>
         </div>
         <div class="login_back" style="margin-top:8px;">
-            <button onclick="location.href='exam01.html'">← 홈으로 돌아가기</button>
+            <button onclick="location.href='exam01.html'" data-swap="← Back to Home">← 홈으로 돌아가기</button>
         </div>
     </div>
 
@@ -177,5 +177,6 @@
         }
     </script>
 
+    <script src="js/hover.js"></script>
 </body>
 </html>

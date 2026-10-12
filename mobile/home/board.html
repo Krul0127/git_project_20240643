@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 - ChoSungmin</title>
+    <link rel="icon" type="image/svg+xml" href="imgs/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dropdown.css">
+    <style>
+        body { background-color: #111; color: #eee; min-height: 100vh; }
+
+        .header { background-color: #1a1a1a; box-shadow: 0 0 6px #000; }
+        .header_title { color: #fff; cursor: pointer; }
+        .header_hambuger, .header_search { color: #fff; }
+        .header_text_input { background-color: #2a2a2a; border-color: #444; color: #eee; }
+        .header_text_input::placeholder { color: #888; }
+        .header_input_button { background-color: #e67e22; border-color: #e67e22; color: #fff; font-weight: bold; cursor: pointer; }
+        .header_input_button:hover { background-color: #cf6d17; }
+
+        .nav_wrapper { background-color: #1a1a1a; border-right: 1px solid #2a2a2a; }
+        .nav_wrapper li:hover { background-color: #252525; }
+        .nav_icon, .nav_menu { color: #ccc; }
+        .nav_menu:hover { color: #e67e22; }
+        .nav_menu.active { color: #e67e22; font-weight: bold; }
+        nav { transition: transform 0.3s ease; }
+        nav.nav_hidden { transform: translateX(-100%); }
+
+        .board_section { margin: 76px 32px 40px 232px; max-width: 900px; }
+        .board_top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .board_top h1 { color: #fff; font-size: 1.4rem; margin: 0; }
+        .board_top h1 small { color: #777; font-size: 0.85rem; margin-left: 6px; }
+
+        .btn_orange { background-color: #e67e22; border: none; border-radius: 8px; color: #fff; font-weight: bold; padding: 8px 18px; cursor: pointer; min-width: 120px; transition: background-color 0.2s; }
+        .btn_orange:hover { background-color: #cf6d17; }
+        .btn_gray { background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; padding: 8px 18px; cursor: pointer; }
+        .btn_gray:hover { border-color: #e67e22; color: #e67e22; }
+        .btn_red { background: transparent; border: 1px solid #c0392b; border-radius: 8px; color: #e74c3c; padding: 8px 18px; cursor: pointer; }
+        .btn_red:hover { background-color: #2a1a1a; }
+
+        /* 마우스 미리보기 상자 */
+        .preview { background-color: #1a1a1a; border: 1px dashed #333; border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; min-height: 76px; color: #777; font-size: 0.88rem; line-height: 1.6; transition: all 0.2s; }
+        .preview b { color: #fff; display: block; margin-bottom: 4px; }
+        .preview span { white-space: pre-wrap; }
+
+        /* 글 목록 */
+        .board_table { width: 100%; border-collapse: collapse; background-color: #1a1a1a; border-radius: 10px; overflow: hidden; }
+        .board_table th { background-color: #222; color: #999; font-size: 0.8rem; font-weight: normal; padding: 10px 8px; text-align: center; }
+        .board_table td { border-top: 1px solid #262626; padding: 12px 8px; font-size: 0.88rem; color: #bbb; text-align: center; }
+        .board_table .col_title { text-align: left; color: #eee; }
+        .board_row { cursor: pointer; transition: background-color 0.15s; }
+        .board_empty { color: #666 !important; padding: 32px 8px !important; }
+
+        /* 글 보기 / 글쓰기 */
+        .board_box { background-color: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; }
+        .view_title { color: #fff; font-size: 1.3rem; font-weight: bold; margin-bottom: 6px; }
+        .view_meta { color: #777; font-size: 0.82rem; padding-bottom: 14px; border-bottom: 1px solid #2a2a2a; margin-bottom: 18px; }
+        .view_content { color: #ddd; line-height: 1.8; white-space: pre-wrap; word-break: break-word; min-height: 120px; }
+        .board_btns { display: flex; gap: 8px; margin-top: 20px; }
+        .write_input { width: 100%; background-color: #2a2a2a; border: 1px solid #444; color: #eee; border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; margin-bottom: 12px; }
+        .write_input:focus { outline: none; border-color: #e67e22; }
+        textarea.write_input { min-height: 220px; resize: vertical; }
+
+        @media screen and (max-width: 800px) {
+            .board_section { margin-left: 88px; }
+            .col_views, .board_table th:last-child { display: none; }
+        }
+        @media screen and (max-width: 400px) {
+            .board_section { margin-left: 16px; margin-right: 16px; }
+            .col_author, .board_table th:nth-child(3) { display: none; }
+        }
+
+        /* 로그인 버튼 */
+        .header_login_btn { height: 32px; padding: 0 14px; margin-right: 8px; background-color: #e67e22; border: none; border-radius: 6px; color: #fff; font-size: 0.82rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+        .header_login_btn:hover { background-color: #cf6d17; }
+        .header_login_btn.logged { background-color: #2a2a2a; border: 1px solid #444; color: #aaa; }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header_wrap">
+            <h1 class="header_start">
+                <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
+                <span class="header_title" onclick="location.href='exam01.html'" data-swap="조성민">ChoSungmin</span>
+            </h1>
+            <div class="header_center">
+                <form class="header_form" onsubmit="return false">
+                    <input class="header_text_input" data-swap-placeholder="Type a keyword to search" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="submit" data-swap="Search">검색</button>
+                </form>
+            </div>
+            <div class="header_end">
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn" data-swap="auto">로그인</button>
+                <button class="header_search" aria-label="검색">&#128269;</button>
+                <div class="header_profile"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav">
+        <ul class="nav_wrapper">
+            <li>
+                <button class="nav_icon">🏠</button>
+                <button class="nav_menu" onclick="location.href='exam01.html'" data-swap="Home">홈</button>
+            </li>
+            <li>
+                <button class="nav_icon">💼</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#projects'" data-swap="Projects">프로젝트</button>
+            </li>
+            <li>
+                <button class="nav_icon">🏅</button>
+                <button class="nav_menu" onclick="location.href='exam01.html#certs'" data-swap="Certificates">자격증</button>
+            </li>
+            <li>
+                <button class="nav_icon">📋</button>
+                <button class="nav_menu active" onclick="location.href='board.html'" data-swap="Board">게시판</button>
+            </li>
+            <li>
+                <button class="nav_icon">💡</button>
+                <button class="nav_menu" onclick="location.href='idea.html'" data-swap="Ideas">아이디어</button>
+            </li>
+            <li>
+                <button class="nav_icon">👤</button>
+                <button class="nav_menu" onclick="location.href='profile.html'" data-swap="About Me">자기소개</button>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="board_section">
+
+        <!-- 목록 화면 -->
+        <div id="listView">
+            <div class="board_top">
+                <h1><span data-swap="📋 Board">📋 게시판</span> <small>전체 <span id="postCount">0</span>개</small></h1>
+                <button class="btn_orange" id="writeBtn" onclick="openWrite()">✏️ 글쓰기</button>
+            </div>
+
+            <!-- mouseover 하면 내용이 바뀌는 미리보기 상자 -->
+            <div class="preview" id="preview"></div>
+
+            <table class="board_table">
+                <thead>
+                    <tr><th style="width:60px;" data-swap="No.">번호</th><th data-swap="Title">제목</th><th style="width:110px;" data-swap="Author">작성자</th><th style="width:110px;" data-swap="Date">날짜</th><th style="width:60px;" data-swap="Views">조회</th></tr>
+                </thead>
+                <tbody id="postList"></tbody>
+            </table>
+        </div>
+
+        <!-- 글 보기 화면 -->
+        <div id="postView" style="display:none;">
+            <div class="board_box">
+                <div class="view_title" id="viewTitle"></div>
+                <div class="view_meta" id="viewMeta"></div>
+                <div class="view_content" id="viewContent"></div>
+                <div class="board_btns">
+                    <button class="btn_gray" onclick="showView('list')" data-swap="← List">← 목록</button>
+                    <button class="btn_red" id="deleteBtn" data-swap="Delete">삭제</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 글쓰기 화면 -->
+        <div id="writeView" style="display:none;">
+            <div class="board_box">
+                <div class="view_title" style="margin-bottom:16px;" data-swap="✏️ New Post">✏️ 새 글 쓰기</div>
+                <input class="write_input" id="writeTitle" data-swap-placeholder="Title" placeholder="제목" maxlength="60">
+                <textarea class="write_input" id="writeContent" data-swap-placeholder="Write your content here" placeholder="내용을 입력하세요" maxlength="2000"></textarea>
+                <div class="board_btns">
+                    <button class="btn_gray" onclick="showView('list')" data-swap="Cancel">취소</button>
+                    <button class="btn_orange" onclick="submitPost()" data-swap="Post">등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/board.js"></script>
+    <script>
+        function toggleNav() {
+            document.getElementById('sideNav').classList.toggle('nav_hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('loginBtn');
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                btn.textContent = '로그아웃';
+                btn.classList.add('logged');
+            }
+        });
+
+        function handleLoginClick() {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                sessionStorage.removeItem('isLoggedIn');
+                sessionStorage.removeItem('userName');
+                location.reload();
+            } else {
+                location.href = 'login.html';
+            }
+        }
+    </script>
+    <script src="js/dropdown.js"></script>
+    <script src="js/hover.js"></script>
+</body>
+</html>

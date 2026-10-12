@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/dropdown.css">
     <style>
         body { background-color: #111; color: #eee; min-height: 100vh; }
 
@@ -169,16 +170,16 @@
         <div class="header_wrap">
             <h1 class="header_start">
                 <button class="header_hambuger" onclick="toggleNav()" aria-label="메뉴 열기">&#9776;</button>
-                <span class="header_title" onclick="location.href='exam01.html'">ChoSungmin</span>
+                <span class="header_title" onclick="location.href='exam01.html'" data-swap="조성민">ChoSungmin</span>
             </h1>
             <div class="header_center">
                 <form class="header_form" onsubmit="return false">
-                    <input class="header_text_input" placeholder="검색하고 싶은 단어 입력">
-                    <button class="header_input_button" type="button">검색</button>
+                    <input class="header_text_input" data-swap-placeholder="Type a keyword to search" placeholder="검색하고 싶은 단어 입력">
+                    <button class="header_input_button" type="button" data-swap="Search">검색</button>
                 </form>
             </div>
             <div class="header_end">
-                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn">로그인</button>
+                <button class="header_login_btn" onclick="handleLoginClick()" id="loginBtn" data-swap="auto">로그인</button>
                 <button class="header_search" aria-label="검색">&#128269;</button>
                 <div class="header_profile"></div>
             </div>
@@ -189,23 +190,27 @@
         <ul class="nav_wrapper">
             <li>
                 <button class="nav_icon">🏠</button>
-                <button class="nav_menu" onclick="location.href='exam01.html'">홈</button>
+                <button class="nav_menu" onclick="location.href='exam01.html'" data-swap="Home">홈</button>
             </li>
             <li>
                 <button class="nav_icon">💼</button>
-                <button class="nav_menu active" onclick="location.href='exam01.html#projects'">프로젝트</button>
+                <button class="nav_menu active" onclick="location.href='exam01.html#projects'" data-swap="Projects">프로젝트</button>
             </li>
             <li>
                 <button class="nav_icon">🏅</button>
-                <button class="nav_menu active" onclick="location.href='exam01.html#certs'">자격증</button>
+                <button class="nav_menu active" onclick="location.href='exam01.html#certs'" data-swap="Certificates">자격증</button>
+            </li>
+            <li>
+                <button class="nav_icon">📋</button>
+                <button class="nav_menu" onclick="location.href='board.html'" data-swap="Board">게시판</button>
             </li>
             <li>
                 <button class="nav_icon">💡</button>
-                <button class="nav_menu" onclick="location.href='idea.html'">아이디어</button>
+                <button class="nav_menu" onclick="location.href='idea.html'" data-swap="Ideas">아이디어</button>
             </li>
             <li>
                 <button class="nav_icon">👤</button>
-                <button class="nav_menu" onclick="location.href='profile.html'">자기소개</button>
+                <button class="nav_menu" onclick="location.href='profile.html'" data-swap="About Me">자기소개</button>
             </li>
         </ul>
     </nav>
@@ -598,5 +603,7 @@
         });
     </script>
 
+    <script src="js/dropdown.js"></script>
+    <script src="js/hover.js"></script>
 </body>
 </html>
