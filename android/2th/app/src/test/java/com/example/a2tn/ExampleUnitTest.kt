@@ -182,7 +182,7 @@ class ExampleUnitTest {
 
 
             for (i in 10..13) {
-                for (j in 1..9) {
+                for (j in 5..10) {
                     print("${i}x${j}=${i * j} ")
                 }
                 println()
