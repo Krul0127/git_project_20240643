@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <!-- 모바일에서도 화면 크기에 맞게 보이도록 설정 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>벽돌깨기</title>
+  <style>
+    /* 화면 가운데에 게임판을 놓고, 배경은 노랑 → 분홍 → 하늘색 그라데이션 */
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(160deg, #fff176, #ffb3d9, #a0e7ff); font-family: sans-serif; }
+    /* 게임판: 최대 360px, 휴대폰에서는 화면 폭의 95%
+       touch-action: none → 손가락으로 드래그할 때 화면이 스크롤되지 않게 막음 */
+    canvas { width: min(360px, 95vw); border: 4px solid #2b2140; border-radius: 16px; background: #fffaf0; touch-action: none; }
+  </style>
+</head>
+<body>
+  <!-- canvas: 자바스크립트로 그림을 그릴 수 있는 도화지 (가로 360, 세로 560) -->
+  <canvas id="game" width="360" height="560"></canvas>
+  <script>
+    // ===== 1. 준비: 도화지와 기본 값 =====
+    const canvas = document.querySelector("#game"); // HTML의 canvas 요소 가져오기
+    const ctx = canvas.getContext("2d");            // ctx: 도화지에 그림을 그리는 붓
+
+    // 게임에서 바뀌지 않는 값(상수)
+    // W, H: 게임판 가로/세로 크기
+    // PADDLE_Y: 막대의 세로 위치 (바닥에서 40px 위)
+    // R: 공의 반지름
+    // COLS: 벽돌 한 줄에 들어가는 개수
+    // BW, BH: 벽돌 하나의 가로/세로 크기
+    const W = 360, H = 560, PADDLE_Y = H - 40, R = 7, COLS = 8, BW = 40, BH = 18;
+
+    // 게임 중에 바뀌는 값(변수)
+    // state: 게임 상태 → "ready"(시작 전), "playing"(게임 중), "over"(게임 오버)
+    let paddle, ball, bricks, score, lives, level, state = "ready";
+
+    // ===== 2. 게임을 세팅하는 함수들 =====
+
+    // 현재 레벨에 맞게 벽돌을 만든다
+    function buildLevel() {
+      bricks = []; // 벽돌 목록을 비우고 새로 채운다
+      // 줄(row) 수는 레벨 + 3, 단 최대 9줄까지
+      for (let row = 0; row < Math.min(3 + level, 9); row++)
+        // 한 줄에 COLS(8)개의 벽돌
+        for (let col = 0; col < COLS; col++)
+          // x, y: 벽돌 왼쪽 위 꼭짓점 위치 (벽돌 사이 간격 가로 3px, 세로 4px)
+          // hue: 색상 값(0~360). 줄마다 40씩 바꿔서 무지개처럼 보이게 함
+          bricks.push({ x: 9 + col * (BW + 3), y: 60 + row * (BH + 4), hue: row * 40 });
+    }
+
+    // 공을 막대 위에 올려 놓는다 (발사 대기 상태)
+    function resetBall() {
+      // vx, vy: 한 번 움직일 때 가로/세로로 이동하는 거리(속도)
+      // stuck: true면 공이 막대에 붙어서 같이 움직임
+      ball = { x: paddle.x, y: PADDLE_Y - R, vx: 0, vy: 0, stuck: true };
+    }
+
+    // 새 게임 시작: 점수, 생명, 레벨을 처음 값으로 되돌린다
+    function start() {
+      paddle = { x: W / 2, w: 80 }; // 막대는 가운데에서 시작, 너비 80
+      score = 0; lives = 3; level = 1; state = "playing";
+      buildLevel(); resetBall();
+    }
+
+    // 클릭/탭/Space를 눌렀을 때 실행
+    function launch() {
+      // 게임 중이 아니면(시작 전이거나 게임 오버) → 새 게임 시작
+      if (state !== "playing") return start();
+      // 공이 이미 날아가는 중이면 아무것도 안 함
+      if (!ball.stuck) return;
+      const speed = 4.5 + level * 0.4;          // 레벨이 오를수록 공이 빨라짐
+      ball.vx = (Math.random() - 0.5) * 3;      // 가로 방향은 랜덤 (-1.5 ~ 1.5)
+      ball.vy = -speed;                          // 세로는 위쪽(-)으로 발사
+      ball.stuck = false;                        // 이제 막대에서 떨어짐
+    }
+
+    // ===== 3. 매 순간 게임 상태를 계산하는 함수 =====
+    function update() {
+      if (state !== "playing") return; // 게임 중이 아니면 계산할 필요 없음
+
+      // 막대가 화면 밖으로 나가지 않게 왼쪽/오른쪽 끝에서 멈추게 함
+      paddle.x = Math.max(paddle.w / 2, Math.min(W - paddle.w / 2, paddle.x));
+
+      // 발사 전이면 공이 막대를 따라다니기만 함
+      if (ball.stuck) { ball.x = paddle.x; return; }
+
+      // 공 이동: 현재 위치에 속도를 더한다
+      ball.x += ball.vx; ball.y += ball.vy;
+
+      // 벽에 닿으면 튕기기
+      // Math.abs()는 절댓값(항상 +). 방향을 확실히 정해서 벽에 끼는 버그를 막음
+      if (ball.x < R) ball.vx = Math.abs(ball.vx);       // 왼쪽 벽 → 오른쪽으로
+      if (ball.x > W - R) ball.vx = -Math.abs(ball.vx);  // 오른쪽 벽 → 왼쪽으로
+      if (ball.y < R) ball.vy = Math.abs(ball.vy);       // 천장 → 아래로
+
+      // 막대에 맞았는지 검사
+      // 조건: 공이 아래로 내려오는 중 + 막대 높이에 있음 + 막대 가로 범위 안에 있음
+      if (ball.vy > 0 && ball.y + R >= PADDLE_Y && ball.y < PADDLE_Y + 12 && Math.abs(ball.x - paddle.x) < paddle.w / 2 + R) {
+        // speed: 현재 공의 빠르기 (가로/세로 속도로 대각선 길이를 구함)
+        // angle: 막대 가운데에 맞으면 0(똑바로 위), 끝에 맞을수록 비스듬히 튕김
+        const speed = Math.hypot(ball.vx, ball.vy), angle = (ball.x - paddle.x) / (paddle.w / 2);
+        // 각도를 가로/세로 속도로 바꿔서 위쪽으로 튕겨 보냄
+        ball.vx = speed * Math.sin(angle); ball.vy = -speed * Math.cos(angle);
+      }
+
+      // 벽돌에 맞았는지 검사: 공과 겹치는 첫 번째 벽돌을 찾는다
+      const hit = bricks.find((b) => ball.x + R > b.x && ball.x - R < b.x + BW && ball.y + R > b.y && ball.y - R < b.y + BH);
+      if (hit) {
+        bricks.splice(bricks.indexOf(hit), 1); // 맞은 벽돌을 목록에서 지움
+        ball.vy *= -1;                          // 위아래 방향을 반대로
+        score += 10;                            // 점수 +10
+      }
+
+      // 공이 바닥 아래로 떨어지면 생명 -1
+      if (ball.y > H) {
+        // --lives: 생명을 먼저 1 줄인 뒤 비교. 0 이하면 게임 오버, 아니면 공을 다시 올려놓음
+        if (--lives <= 0) state = "over"; else resetBall();
+      }
+
+      // 벽돌을 다 깼으면 다음 레벨로
+      if (bricks.length === 0) { level++; buildLevel(); resetBall(); }
+    }
+
+    // ===== 4. 화면에 그리는 함수 =====
+    function draw() {
+      ctx.clearRect(0, 0, W, H); // 이전 그림을 지움 (안 지우면 잔상이 남음)
+
+      // 위쪽에 점수/레벨/생명 표시
+      // ?? : 값이 아직 없으면(게임 시작 전) 오른쪽 값을 대신 사용
+      ctx.fillStyle = "#2b2140";
+      ctx.font = "18px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(`점수 ${score ?? 0}   레벨 ${level ?? 1}   ❤️ ${lives ?? 3}`, W / 2, 30);
+
+      // 시작 전 또는 게임 오버일 때는 안내 문구만 보여줌
+      if (state !== "playing") {
+        ctx.font = "28px sans-serif";
+        ctx.fillText(state === "over" ? "게임 오버!" : "벽돌깨기", W / 2, H / 2 - 20);
+        ctx.font = "18px sans-serif";
+        ctx.fillText("탭 또는 Space로 시작", W / 2, H / 2 + 20);
+        return;
+      }
+
+      // 벽돌 그리기: hsl(색상, 채도, 밝기)로 줄마다 다른 색
+      bricks.forEach((b) => {
+        ctx.fillStyle = `hsl(${b.hue}, 90%, 70%)`;
+        ctx.fillRect(b.x, b.y, BW, BH);
+      });
+
+      // 막대 그리기 (paddle.x는 막대의 가운데라서 너비의 절반만큼 왼쪽에서 시작)
+      ctx.fillStyle = "#ff6fb5";
+      ctx.fillRect(paddle.x - paddle.w / 2, PADDLE_Y, paddle.w, 12);
+
+      // 공 그리기: 반지름 R인 원
+      ctx.fillStyle = "#2b2140";
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, R, 0, Math.PI * 2); // 0 ~ 2π = 한 바퀴
+      ctx.fill();
+    }
+
+    // ===== 5. 게임 루프 =====
+    // 계산(update) → 그리기(draw)를 1초에 약 60번 반복해서 움직이는 것처럼 보이게 함
+    // requestAnimationFrame: 브라우저가 다음 화면을 그릴 때 loop를 다시 실행해 줌
+    (function loop() { update(); draw(); requestAnimationFrame(loop); })();
+
+    // ===== 6. 조작 (마우스 / 터치 / 키보드) =====
+
+    // 마우스나 손가락을 움직이면 막대가 따라옴
+    // 화면에 보이는 canvas 크기와 실제 게임판 크기(360)가 다를 수 있어서 비율로 변환
+    canvas.addEventListener("pointermove", (e) => {
+      if (paddle) paddle.x = ((e.clientX - canvas.getBoundingClientRect().left) / canvas.clientWidth) * W;
+    });
+
+    // 클릭하거나 탭하면 시작 또는 공 발사
+    canvas.addEventListener("pointerdown", launch);
+
+    // 키보드: Space는 발사, 방향키로 막대 이동
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space") { e.preventDefault(); launch(); } // preventDefault: Space 눌러도 페이지가 스크롤되지 않게
+      if (paddle && e.code === "ArrowLeft") paddle.x -= 25;
+      if (paddle && e.code === "ArrowRight") paddle.x += 25;
+    });
+  </script>
+</body>
+</html>

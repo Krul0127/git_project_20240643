@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구구단 놀이터</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #2b2140;
+      --yellow: #ffd93d;
+      --pink: #ff6fb5;
+      --mint: #4ee6b4;
+      --sky: #59c3ff;
+      --purple: #b18cff;
+      --orange: #ff9a3c;
+      --cream: #fffaf0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 2.5rem 1rem 3rem;
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: "Jua", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.55) 3px, transparent 3.5px) 0 0 / 34px 34px,
+        linear-gradient(160deg, #fff176 0%, #ffb3d9 45%, #a0e7ff 100%);
+      background-attachment: fixed;
+    }
+
+    /* 떠다니는 장식 */
+    .deco {
+      position: fixed;
+      z-index: -1;
+      font-size: 2.6rem;
+      animation: bob 4s ease-in-out infinite;
+      user-select: none;
+    }
+
+    .deco:nth-of-type(1) { top: 8%; left: 6%; }
+    .deco:nth-of-type(2) { top: 18%; right: 8%; animation-delay: -1s; }
+    .deco:nth-of-type(3) { bottom: 14%; left: 9%; animation-delay: -2s; }
+    .deco:nth-of-type(4) { bottom: 8%; right: 12%; animation-delay: -3s; }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0) rotate(-8deg); }
+      50% { transform: translateY(-18px) rotate(8deg); }
+    }
+
+    main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 2rem;
+      border: 4px solid var(--ink);
+      border-radius: 32px;
+      background: var(--cream);
+      box-shadow: 10px 10px 0 var(--ink);
+    }
+
+    header {
+      position: relative;
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .mascot {
+      display: inline-block;
+      font-size: 3.4rem;
+      animation: jump 1.6s ease-in-out infinite;
+    }
+
+    @keyframes jump {
+      0%, 100% { transform: translateY(0) scale(1, 1); }
+      40% { transform: translateY(-14px) scale(0.95, 1.05); }
+      55% { transform: translateY(0) scale(1.1, 0.9); }
+    }
+
+    .bubble {
+      position: relative;
+      display: inline-block;
+      margin-left: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      background: white;
+      font-size: 1rem;
+      vertical-align: top;
+      transform: rotate(4deg);
+    }
+
+    .bubble::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: -10px;
+      width: 14px;
+      height: 14px;
+      border-left: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      background: white;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    h1 {
+      margin: 0.6rem 0 0.3rem;
+      font-size: 3rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    h1 .letter {
+      display: inline-block;
+      -webkit-text-stroke: 2px var(--ink);
+      paint-order: stroke fill;
+      text-shadow: 3px 3px 0 var(--ink);
+      animation: wiggle 2.4s ease-in-out infinite;
+    }
+
+    h1 .letter:nth-child(5n + 1) { color: var(--pink); }
+    h1 .letter:nth-child(5n + 2) { color: var(--yellow); animation-delay: 0.15s; }
+    h1 .letter:nth-child(5n + 3) { color: var(--mint); animation-delay: 0.3s; }
+    h1 .letter:nth-child(5n + 4) { color: var(--sky); animation-delay: 0.45s; }
+    h1 .letter:nth-child(5n + 5) { color: var(--purple); animation-delay: 0.6s; }
+
+    @keyframes wiggle {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      25% { transform: translateY(-5px) rotate(-6deg); }
+      75% { transform: translateY(2px) rotate(5deg); }
+    }
+
+    header p {
+      margin: 0;
+      color: #6b5e86;
+      font-size: 1.05rem;
+    }
+
+    form {
+      display: flex;
+      gap: 0.7rem;
+    }
+
+    form.shake {
+      animation: shake 0.45s;
+    }
+
+    @keyframes shake {
+      20%, 60% { transform: translateX(-9px) rotate(-1deg); }
+      40%, 80% { transform: translateX(9px) rotate(1deg); }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.9rem 1.2rem;
+      border: 3px solid var(--ink);
+      border-radius: 18px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+      font-size: 1.25rem;
+      outline: none;
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    }
+
+    input::placeholder {
+      color: #b6aac9;
+    }
+
+    input:focus {
+      background: #fffbe0;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--pink);
+    }
+
+    button {
+      cursor: pointer;
+      font: inherit;
+      color: var(--ink);
+    }
+
+    .submit {
+      padding: 0.9rem 1.5rem;
+      border: 3px solid var(--ink);
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--pink), var(--orange));
+      color: white;
+      font-size: 1.2rem;
+      text-shadow: 2px 2px 0 var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+
+    .submit:hover {
+      transform: translate(-2px, -2px) rotate(-2deg);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .submit:active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+
+    .error {
+      min-height: 1.4rem;
+      margin: 0.7rem 0 0;
+      color: #e5397f;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+
+    .quick {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 0.4rem;
+    }
+
+    .quick button {
+      width: 3rem;
+      height: 3rem;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      font-size: 1.3rem;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: transform 0.2s cubic-bezier(0.34, 1.8, 0.64, 1), box-shadow 0.15s;
+    }
+
+    .quick button:nth-child(1) { background: var(--pink); }
+    .quick button:nth-child(2) { background: var(--yellow); }
+    .quick button:nth-child(3) { background: var(--mint); }
+    .quick button:nth-child(4) { background: var(--sky); }
+    .quick button:nth-child(5) { background: var(--purple); }
+    .quick button:nth-child(6) { background: var(--orange); }
+    .quick button:nth-child(7) { background: #ff8a8a; }
+    .quick button:nth-child(8) { background: #9ef06c; }
+
+    .quick button:hover {
+      transform: translateY(-5px) rotate(-10deg) scale(1.1);
+    }
+
+    .quick button.active {
+      transform: translateY(-5px) scale(1.2);
+      box-shadow: 0 0 0 4px white, 0 0 0 7px var(--ink);
+    }
+
+    #result-section {
+      margin-top: 2rem;
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    h2 {
+      margin: 0;
+      padding: 0.35rem 1.1rem;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: var(--yellow);
+      font-size: 1.6rem;
+      font-weight: 400;
+      box-shadow: 4px 4px 0 var(--ink);
+      transform: rotate(-3deg);
+    }
+
+    .sum {
+      margin: 0;
+      padding: 0.35rem 0.9rem;
+      border: 3px dashed var(--ink);
+      border-radius: 14px;
+      background: white;
+      font-size: 1.05rem;
+      transform: rotate(2deg);
+    }
+
+    .sum strong {
+      color: var(--pink);
+      font-weight: 400;
+    }
+
+    #results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    #results li {
+      padding: 1rem 0.5rem 0.9rem;
+      border: 3px solid var(--ink);
+      border-radius: 22px;
+      background: linear-gradient(160deg, white 0%, var(--card) 140%);
+      text-align: center;
+      box-shadow: 5px 5px 0 var(--ink);
+      transform: rotate(var(--tilt));
+      animation: drop 0.55s cubic-bezier(0.34, 1.7, 0.64, 1) backwards;
+      transition: transform 0.2s cubic-bezier(0.34, 1.8, 0.64, 1), box-shadow 0.2s;
+    }
+
+    #results li:hover {
+      transform: rotate(0) scale(1.08);
+      box-shadow: 8px 8px 0 var(--ink);
+      z-index: 1;
+    }
+
+    @keyframes drop {
+      from {
+        opacity: 0;
+        transform: translateY(-40px) rotate(calc(var(--tilt) * -4)) scale(0.6);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) rotate(var(--tilt)) scale(1);
+      }
+    }
+
+    .expr {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: var(--card);
+      font-size: 0.95rem;
+    }
+
+    .answer {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 2.2rem;
+      color: white;
+      -webkit-text-stroke: 2px var(--ink);
+      paint-order: stroke fill;
+      text-shadow: 3px 3px 0 var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    footer {
+      margin-top: 2rem;
+      color: #8c7fa6;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    /* 꽃가루 */
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 14px;
+      border: 2px solid var(--ink);
+      border-radius: 3px;
+      pointer-events: none;
+      z-index: 10;
+      animation: confetti 1.2s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+    }
+
+    @keyframes confetti {
+      to {
+        transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1.5rem 0.8rem 2rem;
+      }
+
+      main {
+        padding: 2rem 1.2rem 1.6rem;
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+
+      h1 {
+        font-size: 2.3rem;
+      }
+
+      form {
+        flex-direction: column;
+      }
+
+      #results {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .deco {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <span class="deco" aria-hidden="true">⭐</span>
+  <span class="deco" aria-hidden="true">🍭</span>
+  <span class="deco" aria-hidden="true">🎈</span>
+  <span class="deco" aria-hidden="true">🌈</span>
+
+  <main>
+    <header>
+      <span class="mascot" aria-hidden="true">🐣</span>
+      <span class="bubble" id="bubble">몇 단 해볼까?</span>
+      <h1 aria-label="구구단 놀이터">
+        <span class="letter">구</span><span class="letter">구</span><span class="letter">단</span>
+        <span class="letter">놀</span><span class="letter">이</span><span class="letter">터</span>
+      </h1>
+      <p>숫자를 넣으면 1부터 9까지 뿅뿅 곱해줄게요!</p>
+    </header>
+
+    <form id="multiplication-form" novalidate>
+      <label for="number" class="sr-only">숫자를 입력하세요</label>
+      <input id="number" name="number" type="number" min="1" step="1" placeholder="숫자 입력! (예: 7)" inputmode="numeric">
+      <button type="submit" class="submit">출발! 🚀</button>
+    </form>
+    <p class="error" id="error" role="alert"></p>
+
+    <div class="quick" aria-label="빠른 선택">
+      <button type="button" data-number="2">2</button>
+      <button type="button" data-number="3">3</button>
+      <button type="button" data-number="4">4</button>
+      <button type="button" data-number="5">5</button>
+      <button type="button" data-number="6">6</button>
+      <button type="button" data-number="7">7</button>
+      <button type="button" data-number="8">8</button>
+      <button type="button" data-number="9">9</button>
+    </div>
+
+    <section id="result-section" aria-live="polite" aria-labelledby="result-title" hidden>
+      <div class="result-head">
+        <h2 id="result-title"></h2>
+        <p class="sum">다 더하면 <strong id="sum">0</strong></p>
+      </div>
+      <ul id="results"></ul>
+    </section>
+
+    <footer>모바일 프로그래밍 9주차 실습 ✏️</footer>
+  </main>
+
+  <script>
+    const form = document.querySelector("#multiplication-form");
+    const numberInput = document.querySelector("#number");
+    const submitButton = document.querySelector(".submit");
+    const errorText = document.querySelector("#error");
+    const bubble = document.querySelector("#bubble");
+    const quickButtons = document.querySelectorAll(".quick button");
+    const resultSection = document.querySelector("#result-section");
+    const resultTitle = document.querySelector("#result-title");
+    const sumText = document.querySelector("#sum");
+    const results = document.querySelector("#results");
+
+    const colors = ["#ff6fb5", "#ffd93d", "#4ee6b4", "#59c3ff", "#b18cff", "#ff9a3c", "#ff8a8a", "#9ef06c", "#ffd93d"];
+    const cheers = ["가보자고~!", "짱이야! 👍", "천재 아니야?", "쉽다 쉬워~", "오늘도 열공!"];
+
+    // 숫자가 0부터 목표값까지 올라가는 애니메이션
+    function countUp(element, target, delay) {
+      const duration = 700;
+      setTimeout(() => {
+        const start = performance.now();
+        function tick(now) {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          element.textContent = Math.round(target * eased).toLocaleString();
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }, delay);
+    }
+
+    function burstConfetti(origin) {
+      const rect = origin.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 28; i += 1) {
+        const piece = document.createElement("span");
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 80 + Math.random() * 140;
+        piece.className = "confetti";
+        piece.style.left = `${x}px`;
+        piece.style.top = `${y}px`;
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
+        piece.style.setProperty("--dy", `${Math.sin(angle) * distance + 120}px`);
+        piece.style.setProperty("--rot", `${Math.random() * 720 - 360}deg`);
+        document.body.append(piece);
+        piece.addEventListener("animationend", () => piece.remove());
+      }
+    }
+
+    function showTable(number, origin) {
+      resultTitle.textContent = `${number.toLocaleString()}단 🎉`;
+      results.replaceChildren();
+
+      for (let multiplier = 1; multiplier <= 9; multiplier += 1) {
+        const delay = multiplier * 70;
+        const item = document.createElement("li");
+        item.style.setProperty("--card", colors[multiplier - 1]);
+        item.style.setProperty("--tilt", `${multiplier % 2 === 0 ? 2 : -2}deg`);
+        item.style.animationDelay = `${delay}ms`;
+        item.innerHTML = `
+          <span class="expr">${number.toLocaleString()} × ${multiplier}</span>
+          <span class="answer">0</span>
+        `;
+        results.append(item);
+        countUp(item.querySelector(".answer"), number * multiplier, delay);
+      }
+
+      countUp(sumText, number * 45, 0);
+
+      quickButtons.forEach((button) => {
+        button.classList.toggle("active", Number(button.dataset.number) === number);
+      });
+
+      bubble.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+      resultSection.hidden = false;
+      burstConfetti(origin);
+    }
+
+    function showError(message) {
+      errorText.textContent = message;
+      bubble.textContent = "앗, 다시! 😵";
+      form.classList.remove("shake");
+      void form.offsetWidth; // 애니메이션 다시 시작
+      form.classList.add("shake");
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const number = Number(numberInput.value);
+
+      if (numberInput.value === "" || !Number.isInteger(number) || number < 1) {
+        showError("1 이상의 정수를 넣어 주세요!");
+        return;
+      }
+
+      errorText.textContent = "";
+      showTable(number, submitButton);
+    });
+
+    quickButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        numberInput.value = button.dataset.number;
+        errorText.textContent = "";
+        showTable(Number(button.dataset.number), button);
+      });
+    });
+  </script>
+</body>
+</html>

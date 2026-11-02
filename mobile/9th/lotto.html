@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로또 번호 생성기</title>
+  <!-- 스타일은 css 폴더, 동작은 js 폴더에 따로 저장 -->
+  <link rel="stylesheet" href="css/lotto.css">
+</head>
+<body>
+  <main class="card">
+    <header>
+      <span class="eyebrow">LUCKY NUMBERS</span>
+      <h1>로또 번호 생성기</h1>
+      <p>버튼을 누르면 1~45 중 겹치지 않는 번호 6개와 보너스 번호 1개를 뽑아요</p>
+    </header>
+
+    <!-- 추첨기: 번호를 뽑는 동안 안의 작은 공들이 섞이는 연출 -->
+    <div class="machine" id="machine" aria-hidden="true">
+      <div class="drum" id="drum"></div>
+      <div class="pipe"></div>
+    </div>
+
+    <!-- 뽑힌 번호 공 6개가 표시되는 곳 -->
+    <div class="result" id="result" aria-live="polite">
+      <p class="placeholder" id="placeholder">번호 출력 버튼을 눌러 주세요</p>
+    </div>
+
+    <!-- 생성 횟수 -->
+    <p class="count">생성 횟수 <strong id="count">0</strong>회</p>
+
+    <!-- 버튼 영역 -->
+    <div class="buttons">
+      <button type="button" class="btn draw" id="draw-btn">번호 출력</button>
+      <button type="button" class="btn reset" id="reset-btn">초기화</button>
+    </div>
+
+    <!-- 실제 지난 회차 당첨번호 -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>지난 회차 당첨번호</h2>
+        <select id="draw-select" aria-label="회차 선택"></select>
+      </div>
+      <p class="panel-sub" id="draw-date"></p>
+      <div class="draw-balls" id="draw-balls"></div>
+    </section>
+
+    <!-- 최근 100회 통계 -->
+    <section class="panel">
+      <h2>최근 100회 많이 나온 번호 TOP 10</h2>
+      <p class="panel-sub" id="stats-range"></p>
+      <ol class="stats" id="stats"></ol>
+      <p class="note">※ 로또는 매 회 모든 번호가 똑같은 확률로 뽑혀요. 많이 나온 번호라고 다음에 더 잘 나오는 건 아니에요.</p>
+    </section>
+
+    <!-- 이 페이지에서 뽑은 번호 기록 -->
+    <section class="history">
+      <h2>HISTORY · 내가 뽑은 번호</h2>
+      <ol id="history"></ol>
+    </section>
+  </main>
+
+  <!-- 실제 당첨번호 데이터를 먼저 불러온 뒤, 그 데이터를 쓰는 lotto.js 실행 -->
+  <script src="js/lotto-data.js"></script>
+  <script src="js/lotto.js"></script>
+</body>
+</html>
